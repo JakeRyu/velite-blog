@@ -1,7 +1,7 @@
 export const siteConfig = {
-  name: "Refined FullStack",
+  name: "REFINED fullstack",
   url: "https://jakeryu.com",
-  description: "Nextjs 14 blog using velite, tailwind and shadcn",
+  description: "Code, Connect, Create: Insights from a Full-Stack Enthusiast.",
   author: "Jake Ryu",
   email: "jake@jakeryu.com",
   links: {

@@ -1,0 +1,65 @@
+---
+title: Http Verbs
+description: HTTP verbs provide the action counterpart to the noun-based resource. Let's find out the primary or most commonly used verbs.
+date: 2024-06-02
+tags: ["api"]
+published: true
+---
+
+HTTP verbs provide the action counterpart to the noun-based resource. The primary or most commonly used verbs are as follows:
+
+# CRUD Operations
+
+| Verb | CRUD | Collection[^1] | Item[^2] | Idempotent | Responses |
+|------|------|----------------|----------|------------|-----------|
+| POST | Create | ✔ | | |  **201** (Created), `Location` header with link to `/orders/{id}` containing new id.<br />**409** (Conflict) if resource already exists.<br />**202** (Accepted) for batch processing. |
+| GET | Read | ✔ | ✔ | ✔ | **200** (Ok), returns list of orders or single order.<br />**404** (Not Found), if id is invalid or not found.<br />**400** (Bad Request), if a query parameter is invalid. |
+| PUT | Update/Replace | | ✔ | ✔ | **200** (Ok) or **204** (No Content)<br />**404** (Not Found) |
+| PATCH | Update/Modify | | ✔ | ✔ | Same as PUT |
+| DELETE | Delete | | ✔ | ✔ | **200** (Ok)<br />**404** (Not Found) |
+
+
+
+## POST 
+POST is used to create resources. Note that it is neither safe (as it changes status) nor idempotent. Making two identical POST requests is likely to result in two resources containing the same data. It is therefore recommended to use the POST verb for non-idempotent resource requests.
+
+Additionally, POST can be used to trigger functions. Functions that may take a longer time to complete should immediately return a 202(Accepted) with a link to check the status of the process during its completion. This is an exceptional case where you use a verb with resources. 그리고, progress tracking 할 수 있는 링크를 제공한다.
+```http
+POST /saving-accounts/calculate-interest
+POST /members/import-data
+```
+
+## GET
+GET is used to retrieve a representation of a resource. This is idempotent which means
+calling it once has the same effect as calling it 10 times. This should never modify any
+resources on the server. GET verbs can retrieve both a collection or a single item. For
+the collection of items, use pagination, sorting, and filtering to navigate through big
+lists.
+
+## PUT 
+PUT is most often utilized for UPDATE capabilities. This replaces the whole object while
+PATCH partially replaces the object. However, PUT can also be used to create a
+resource when the resource id is chosen by the client instead of by the server. As the
+client send an id, the server can create or update a resource depending on its
+existence, a.k.a. UPSERT (which is known as UPSERT). 
+
+On a successful update, return a 200 (or a 204 if returning no content in the body) from a PUT. If you are using PUT to create, return HTTP status of 201 on its successful creation. A body in the response
+is optional; remember that providing one consumes more bandwidth. Returning a link via a Location header during its creation is not necessary since the client already sets the resource ID. It is recommended to keep PUT requests idempotent, and use POST for non-idempotent requests.
+
+## PATCH
+is used for MODIFY capabilities. The request only contains the changes to the resource, and not the complete resource. PATCH is neither safe nor idempotent according to the HTTP specifications. If the outcome should be idempotent, use PUT with a whole object. 
+
+PUT / PATCH are the action to an item. If a request is made to a collection URI (without an id), return
+405 (Method Not Allowed), unless you want to update every resource in the entire collection.
+
+## DELETE
+is used to delete a resource that's been identified by a URI. On successful deletion, return a HTTP status of 200 (OK) along with a response body, perhaps containing the representation of the deleted item. Otherwise, return a HTTP status of 204 (NO CONTENT) without a response body. 
+
+According to the HTTP specifications, DELETE operations are idempotent resulting in a complete deletion of the resource. However, returning a 404 (NOT FOUND) is acceptable if the resource has already been deleted.
+This is a caveat of the DELETE idempotent.
+
+
+### Footnotes
+
+[^1]: `/orders`
+[^2]: `/orders/{orderId}`

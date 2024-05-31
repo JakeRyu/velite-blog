@@ -1,0 +1,231 @@
+---
+title: The Ultimate Guide to RESTful API Naming Conventions
+description: Consistency, readability, and maintainability - these are the trifecta of good API design. Consistent naming helps developers know what to expect, readable names reduce the cognitive load, and maintainable names make updates a breeze.
+date: 2024-05-30
+tags: ["api"]
+published: true
+language: KR
+---
+
+# Poor Naming
+
+How do you feel when you encounter API endpoints like `/getAllProducts`, `/UsersList`, or `/payments/{memberId}`? Frustrated? Confused? You’re not alone. Poor naming conventions can make even the simplest tasks a nightmare.
+
+## Bad Examples and Why They Are Problematic:
+
+1. `/getAllProducts`
+
+    - **Problem**: The name includes a verb (get), which should be implied by the HTTP method (GET). It also suggests a specific action rather than a resource.
+    - **Confusion**: What if we have an endpoint like `/getProductDetails`? The verb-based naming can easily become inconsistent and lead to confusion.
+
+2. `/UsersList`
+
+    - **Problem**: Combining a plural noun with another noun (List) is redundant and less clear. The name should represent a resource collection.
+    - **Confusion**: If there’s a `/UserDetails`, it’s not immediately clear if it’s for a single user or multiple users. Consistency in naming is key.
+
+3. `/payments/{memberId}`
+
+    - **Problem**: The URI suggests that `memberId` is an identifier for payments, which can be misleading. It might imply that `memberId` is actually a payment ID.
+    - **Confusion**: Developers might assume that `/payments/{memberId}` retrieves a specific payment based on `memberId`, rather than understanding it’s related to a member. This can lead to misinterpretation and errors.
+
+
+# The Importance of Good Naming Conventions
+> Consistency, readability, and maintainability - these are the trifecta of good API design. Consistent naming helps developers know what to expect, readable names reduce the cognitive load, and maintainable names make updates a breeze.
+
+# Naming Conventions
+
+## General Guidelines
+
+1. **HTTP Verbs for Operations**: Let HTTP methods do the action-talking. Use `GET /books` instead of `/getBooks`.
+1. **Use Nouns for Resources**: Think of your resources as entities. For instance, `/users` and `/orders` are intuitive and clear.
+1. **Use Plural Names**: Plural names like `/books` make it clear you're dealing with a collection.
+1. **Use URL Parameters for Single Items**: For a single item, use a URL parameter, `{resourceId}`, immediately after the plural resource name. For example, `/users/{userId}` and `/books/{bookId}` clearly indicate that you are referencing a specific item within the collection.
+1. **Styles**:
+    - Use forward slash to indicate hierarchical relationships.
+    - Use hyphens `-` to improve readability  (`/user-orders` vs `/user_orders`).
+    - Use lowercase.
+    - Don't use trailing forward slashes.
+    - Don't use underscores `_` as they can be confused with link formatting.
+    - Don't use file extensions like /managed-devices.xml.
+
+## Structuring Resource URIs
+
+1. **Hierarchical Relationships**: Show relationships like `/users/{userId}/orders`.
+1. **Filtering, Sorting, and Pagination**: Use query parameters for these operations. For example:
+    - Filtering: `/books?author=tolkien`
+    - Sorting: `/books?sort=asc`
+    - Pagination: `/books?page=2`
+1. **Versioning**: Maintain backward compatibility and manage changes with versioned URIs. For example, use `/v1/books` to indicate version 1 of the API.
+1. **Use Singular Names to Denote Resource Archetypes**: In cases where you need to denote a specific type or archetype of a resource, use singular names within the plural collection. This helps to specify sub-categories or roles within a broader resource category while maintaining clarity and consistency. For example:
+    - `GET /user-management/users/admin`: This URI clearly indicates that you are fetching users who are of the "admin" type within the user-management context. By specifying admin, you denote a specific archetype of user. This approach avoids ambiguity and makes it clear that the request is for a subset of the user resource, specifically those with the admin role.
+1. **Use Verbs to Denote Controller Resources**: Treat controller resources like executable functions and use verbs to clearly denote actions. This helps to distinguish between standard resource operations and specific commands or operations. For example:
+    - `POST /cart-management/users/{id}/cart/checkout`: This endpoint indicates an action to checkout a user’s cart. The verb checkout makes it clear that this is a command or operation rather than a simple resource manipulation.
+    - `POST /song-management/users/{id}/playlist/play`: This URI specifies an action to play a user’s playlist. The verb play clearly indicates that this is an operation being performed on the playlist resource.
+
+By adhering to these guidelines, you can create APIs that are intuitive and easy to work with, reducing confusion and improving the developer experience.
+
+
+# Common Pitfalls and How to Avoid Them
+##  Overusing Nested Resources 
+
+Avoid deep nesting like `/users/{userId}/orders/{orderId}/items/{itemId}`. Stick to simple, flat structures.
+
+1. **Flat Resource Structures:**<br />
+Instead of deeply nested routes, use flat routes with clear identifiers. For example, rather than `/users/{userId}/orders/{orderId}/items/{itemId}`, you can use `/items/{itemId}` and include the related resource identifiers in the query parameters or body if necessary.
+    ```http
+    GET /items/{itemId}?userId={userId}&orderId={orderId}
+    ```
+    Even if you have the item identifier and can fetch the item directly, passing `userId` and `orderId` can be beneficial. Including these parameters can save additional database calls for handling related information.
+
+2. **Use Query Parameters:**<br />
+Use query parameters to filter and relate resources without nesting. This keeps URLs cleaner and more understandable.
+    ```http
+    GET /items?userId={userId}&orderId={orderId}
+    ```
+
+3. **Hypermedia as the Engine of Application State (HATEOAS):**<br />
+Implement HATEOAS to provide links to related resources, allowing clients to navigate between them without needing deep nesting in the URL structure.
+    ```json
+    {
+      "item": {
+        "id": "itemId",
+        "name": "Item Name",
+        "_links": {
+          "self": { "href": "/items/itemId" },
+          "order": { "href": "/orders/orderId" },
+          "user": { "href": "/users/userId" }
+        }
+      }
+    }
+    ```
+
+4. **Resource Aggregation:**<br />
+Aggregate related data into a single resource when possible. For instance, instead of retrieving an order and its items separately, you could design an endpoint that returns an order along with its items.
+    ```http
+    GET /orders/{orderId}
+    ```
+    ```json
+    {
+      "orderId": "orderId",
+      "userId": "userId",
+      "items": [
+        { "itemId": "item1", "name": "Item 1" },
+        { "itemId": "item2", "name": "Item 2" }
+      ]
+    }
+    ```
+
+5. **Resource Expansion:**<br />
+Allow clients to request related resources to be expanded inline. This can be done through query parameters that specify which related resources to include.
+    ```http
+    GET /orders/{orderId}?expand=items,user
+    ```
+    ```json
+    {
+      "orderId": "orderId",
+      "userId": "userId",
+      "user": { "userId": "userId", "name": "User Name" },
+      "items": [
+        { "itemId": "item1", "name": "Item 1" },
+        { "itemId": "item2", "name": "Item 2" }
+      ]
+    }
+    ```
+
+By applying these strategies, you can keep your API endpoints more maintainable and user-friendly while avoiding the complexity of deeply nested structures.
+
+## Inconsistent Naming
+In a large project, different team members might name resources, endpoints, variables, and functions differently. For instance, some might use camelCase (`getUserData`), while others use snake_case (`get_user_data`), and some might even use different terms for the same concept (e.g., `userId` vs `user_id` vs `UserID`). This inconsistency can lead to confusion, errors, and increased maintenance time.
+
+1. **Establish Naming Conventions:**<br />
+    Create a comprehensive naming convention document that all team members follow. This should cover naming for variables, functions, endpoints, database tables, and any other relevant elements.
+    > ### Naming Conventions
+    > - Variables and functions: camelCase
+    > - Database tables: snake_case
+    > - API endpoints: kebab-case
+    > - Constants: UPPER_CASE
+
+2. **Use Linters and Code Formatters:**<br />
+Integrate linters (e.g., ESLint for JavaScript, Spectral for OpenAPI) and code formatters (e.g., Prettier) into your development workflow. Configure them to enforce the naming conventions automatically.
+
+3. **Code Reviews:**<br />
+Conduct regular code reviews where naming conventions are checked. Ensure that reviewers are strict about following the agreed-upon conventions.
+    ```Markdown
+    ## Code Review Checklist
+    - [ ] Are naming conventions followed consistently?
+    - [ ] Are variable and function names meaningful and descriptive?
+    ```
+
+4. **Automated CI/CD Checks:**<br />
+Implement CI/CD pipelines that include checks for naming conventions. This can prevent non-conforming code from being merged into the main codebase.
+
+5. **Documentation and Training:**<br />
+Regularly update the team on the importance of naming conventions and provide training sessions  for new team members. Documentation should be easily accessible and up-to-date.
+
+By implementing these solutions, you can mitigate the common pitfall of inconsistent naming and maintain a clean, understandable, and maintainable codebase.
+
+## Ignoring Standards
+
+Imagine a team developing an API without following RESTful principles or common HTTP status codes. They might use custom status codes, like `299` for a successful creation instead of the standard `201 Created`, or they might not use proper HTTP verbs (e.g., using `GET` for creating a resource). This can lead to confusion, poor interoperability, and difficulties in maintaining and scaling the application.
+
+1. **Adhere to RESTful API Principles:**<br />
+Follow REST principles such as using the correct HTTP methods (GET, POST, PUT, DELETE) and proper status codes (200 OK, 201 Created, 400 Bad Request, 404 Not Found).
+    ```http
+    POST /users
+    201 Created
+    Location: /users/{userId}
+    ```
+
+2. **Use Standard HTTP Status Codes:**<br />
+Always use standard HTTP status codes to indicate the result of an HTTP request. This ensures that clients can understand and handle responses correctly.
+    ```http
+    200 OK – Request succeeded
+    201 Created – Resource created successfully
+    400 Bad Request – Client error in the request
+    401 Unauthorized – Authentication required
+    404 Not Found – Resource not found
+    500 Internal Server Error – Server encountered an error
+    ```
+
+3. **Use Standardized Documentation:**<br />
+Document your API using standard formats like OpenAPI (formerly Swagger). This ensures that your API is well-documented and can be easily understood by other developers.
+    ```yaml
+    # openapi.yaml
+    openapi: 3.0.0
+    info:
+      title: Sample API
+      version: 1.0.0
+    paths:
+      /users:
+        get:
+          summary: Retrieve a list of users
+          responses:
+            '200':
+              description: A list of users
+              content:
+                application/json:
+                  schema:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+    ```
+
+    By following these solutions, you can ensure that your projects adhere to industry standards, making them more reliable, maintainable, and easier to integrate with other systems.
+
+# Importance of API Documentation
+
+Having a centralized API documentation can significantly help in maintaining consistent naming conventions and avoiding mistakes. Here's why API documentation is crucial and some additional thoughts on it:
+
+1. **Centralized Reference:**<br />
+A well-maintained API documentation serves as a single source of truth for all endpoints, parameters, and data models. This helps all team members adhere to the same naming conventions.
+1. **Consistency:**<br />
+By documenting your API, you ensure that everyone understands and follows the established conventions. It reduces the risk of inconsistent naming across different parts of the API.
+1. **Ease of Onboarding:**<br />
+New team members can quickly get up to speed by referring to the documentation. They can see the correct naming conventions and structures in one place.
+1. **Improved Collaboration:**<br />
+With clear documentation, developers, testers, and stakeholders can easily understand how the API works, facilitating better collaboration and reducing miscommunication.
+1. **Automated Documentation Tools:**<br />
+Tools like Swagger/OpenAPI, Postman, and others can generate documentation automatically from your codebase. This ensures that your documentation is always up-to-date with the latest changes.
+
+# Conclusion
+Naming conventions might seem minor, but they're the backbone of a good API. Start implementing these practices today and see the difference. Have any tips or questions? Get in touch!

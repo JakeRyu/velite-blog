@@ -7,6 +7,7 @@ import { Providers } from "@/components/providers"
 import { siteConfig } from "@/config/site"
 import { SiteFooter } from "@/components/site-footer"
 import { Analytics } from "@vercel/analytics/react"
+import LanguageContextProvider from "../context/language-context"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 
@@ -37,11 +38,13 @@ export default function RootLayout({
         )}
       >
         <Providers>
-          <div className="relative flex min-h-dvh flex-col bg-background">
-            <SiteHeader />
-            <main className="flex-1">{children}</main>
-            <SiteFooter />
-          </div>
+          <LanguageContextProvider>
+            <div className="relative flex min-h-dvh flex-col bg-background">
+              <SiteHeader />
+              <main className="flex-1">{children}</main>
+              <SiteFooter />
+            </div>
+          </LanguageContextProvider>
         </Providers>
         <Analytics />
       </body>

@@ -5,6 +5,7 @@ import { Tag } from "@/components/tag"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { getAllTags, sortPosts, sortTagsByCount } from "@/lib/utils"
 import { Metadata } from "next"
+import { cookies } from "next/headers"
 
 export const metadata: Metadata = {
   title: "Blog | REFINED fullstack",
@@ -21,10 +22,18 @@ interface BlogPageProps {
 }
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
-  console.log("blog page posts", posts)
+  const cookieStore = cookies()
+  const cookie = cookieStore.get("language")
+  let language: string = ""
+  if (cookie) {
+    language = cookie.value
+  }
 
   const currentPage = Number(searchParams?.page) || 1
-  const sortedPosts = sortPosts(posts.filter((post) => post.published))
+  const postsInLanguage = posts.filter((post) => post.language === language)
+  const sortedPosts = sortPosts(
+    postsInLanguage.filter((post) => post.published)
+  )
   const totalPages = Math.ceil(sortedPosts.length / POSTS_PER_PAGE)
 
   const displayPosts = sortedPosts.slice(

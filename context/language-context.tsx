@@ -23,13 +23,19 @@ export default function LanguageContextProvider({
   const [language, setLanguage] = useState<Language>("en")
 
   const selectLanguage = (lang: Language) => {
-    setCookie("language", lang, { path: "/" })
+    setCookie("language", lang, {
+      path: "/",
+      expires: new Date("Fri, 31 Dec 9999 23:59:59 GMT"),
+    })
     setLanguage(lang)
     window.location.reload()
   }
 
   const setDefaultLanguage = () => {
-    setCookie("language", "en", { path: "/" })
+    setCookie("language", "en", {
+      path: "/",
+      expires: new Date("Fri, 31 Dec 9999 23:59:59 GMT"),
+    })
     setLanguage("en")
   }
 

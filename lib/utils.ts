@@ -116,3 +116,20 @@ export function getSecondToLastPathSegment(url: string) {
     return null
   }
 }
+
+export function stripQueryParameters(url: string) {
+  try {
+    const parsedUrl = new URL(url)
+    // Set the search property to an empty string to remove the query parameters
+    parsedUrl.search = ""
+    return parsedUrl.toString()
+  } catch (error) {
+    console.error("Invalid URL provided:", error)
+    return null
+  }
+}
+
+// Example usage
+const urlWithQuery = "http://localhost:3000/blog?page=2"
+const urlWithoutQuery = stripQueryParameters(urlWithQuery)
+console.log(urlWithoutQuery) // Output: "http://localhost:3000/blog"

@@ -8,6 +8,7 @@ import {
   isBlogUrl,
   isTagPageUrl,
   isTagsUrl,
+  stripQueryParameters,
 } from "@/lib/utils"
 
 export type Language = "en" | "ko"
@@ -42,7 +43,18 @@ export default function LanguageContextProvider({
   const reload = (lang: Language) => {
     const url = window.location.href
 
-    if (isBlogUrl(url) || isTagsUrl(url) || isTagPageUrl(url)) {
+    if (isBlogUrl(url)) {
+      const urlWithoutQuery = stripQueryParameters(url)
+      if (urlWithoutQuery == null) {
+        console.error("Failed to strip query parameters")
+        return
+      }
+
+      window.location.href = urlWithoutQuery
+      return
+    }
+
+    if (isTagsUrl(url) || isTagPageUrl(url)) {
       window.location.reload()
       return
     }
@@ -52,7 +64,7 @@ export default function LanguageContextProvider({
       const lastPathSegment = getLastPathSegment(currentUrl)
 
       if (lastPathSegment == null) {
-        console.error()
+        console.error("Failed to get last path segment")
         return
       }
 

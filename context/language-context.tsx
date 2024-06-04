@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react"
 import { CookiesProvider, useCookies } from "react-cookie"
-import { isBlogUrl, isTagsUrl } from "@/lib/utils"
+import { isBlogUrl, isTagPageUrl, isTagsUrl } from "@/lib/utils"
 
 export type Language = "en" | "ko"
 
@@ -36,7 +36,7 @@ export default function LanguageContextProvider({
   const reload = (lang: Language) => {
     const url = window.location.href
 
-    if (isBlogUrl(url) || isTagsUrl(url)) {
+    if (isBlogUrl(url) || isTagsUrl(url) || isTagPageUrl(url)) {
       window.location.reload()
     }
   }

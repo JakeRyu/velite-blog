@@ -1,40 +1,44 @@
-import { posts } from "#site/content";
-import { PostItem } from "@/components/post-item";
-import { Tag } from "@/components/tag";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getAllTags, getPostsByTagSlug, sortTagsByCount } from "@/lib/utils";
-import { slug } from "github-slugger";
-import { Metadata } from "next";
+import { posts } from "#site/content"
+import { PostItem } from "@/components/post-item"
+import { Tag } from "@/components/tag"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { getAllTags, getPostsByTagSlug, sortTagsByCount } from "@/lib/utils"
+import { slug } from "github-slugger"
+import { Metadata } from "next"
+import { getLanguageCookie } from "../../serverUtils"
 
 interface TagPageProps {
   params: {
-    tag: string;
-  };
+    tag: string
+  }
 }
 
 export async function generateMetadata({
   params,
 }: TagPageProps): Promise<Metadata> {
-  const { tag } = params;
+  const { tag } = params
   return {
     title: tag,
     description: `Posts on the topic of ${tag}`,
-  };
+  }
 }
 
 export const generateStaticParams = () => {
-  const tags = getAllTags(posts);
-  const paths = Object.keys(tags).map((tag) => ({ tag: slug(tag) }));
-  return paths;
-};
+  const tags = getAllTags(posts)
+  const paths = Object.keys(tags).map((tag) => ({ tag: slug(tag) }))
+  return paths
+}
 
 export default function TagPage({ params }: TagPageProps) {
-  const { tag } = params;
-  const title = tag.split("-").join(" ");
+  const language = getLanguageCookie()
+  const postsInLanguage = posts.filter((post) => post.language === language)
 
-  const displayPosts = getPostsByTagSlug(posts, tag);
-  const tags = getAllTags(posts);
-  const sortedTags = sortTagsByCount(tags);
+  const { tag } = params
+  const title = tag.split("-").join(" ")
+
+  const displayPosts = getPostsByTagSlug(postsInLanguage, tag)
+  const tags = getAllTags(postsInLanguage)
+  const sortedTags = sortTagsByCount(tags)
 
   return (
     <div className="container max-w-4xl py-6 lg:py-10">
@@ -51,7 +55,7 @@ export default function TagPage({ params }: TagPageProps) {
           {displayPosts?.length > 0 ? (
             <ul className="flex flex-col">
               {displayPosts.map((post) => {
-                const { slug, date, title, description, tags } = post;
+                const { slug, date, title, description, tags } = post
                 return (
                   <li key={slug}>
                     <PostItem
@@ -62,7 +66,7 @@ export default function TagPage({ params }: TagPageProps) {
                       tags={tags}
                     />
                   </li>
-                );
+                )
               })}
             </ul>
           ) : (
@@ -81,5 +85,5 @@ export default function TagPage({ params }: TagPageProps) {
         </Card>
       </div>
     </div>
-  );
+  )
 }

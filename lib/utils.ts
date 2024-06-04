@@ -65,6 +65,15 @@ export function isTagsUrl(url: string) {
   return false
 }
 
+export function isTagPageUrl(url: string) {
+  const segment = getSecondToLastPathSegment(url)
+  if (segment === "tags") {
+    return true
+  }
+
+  return false
+}
+
 function getLastPathSegment(url: string) {
   try {
     // Create a URL object

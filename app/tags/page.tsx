@@ -1,16 +1,19 @@
-import { getAllTags, sortTagsByCount } from "@/lib/utils";
-import { Metadata } from "next";
-import { posts } from "#site/content";
-import { Tag } from "@/components/tag";
+import { getAllTags, sortTagsByCount } from "@/lib/utils"
+import { Metadata } from "next"
+import { posts } from "#site/content"
+import { Tag } from "@/components/tag"
+import { getLanguageCookie } from "../serverUtils"
 
 export const metadata: Metadata = {
   title: "Tags",
   description: "Topic I've written about",
-};
+}
 
 export default async function TagsPage() {
-  const tags = getAllTags(posts);
-  const sortedTags = sortTagsByCount(tags);
+  const language = getLanguageCookie()
+  const postsInLanguage = posts.filter((post) => post.language === language)
+  const tags = getAllTags(postsInLanguage)
+  const sortedTags = sortTagsByCount(tags)
 
   return (
     <div className="container max-w-4xl py-6 lg:py-10">
@@ -26,5 +29,5 @@ export default async function TagsPage() {
         ))}
       </div>
     </div>
-  );
+  )
 }

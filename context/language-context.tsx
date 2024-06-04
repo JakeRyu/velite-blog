@@ -2,8 +2,9 @@
 
 import { createContext, useContext, useEffect, useState } from "react"
 import { CookiesProvider, useCookies } from "react-cookie"
+import { isBlogUrl, isTagsUrl } from "@/lib/utils"
 
-export type Language = "en" | "kr"
+export type Language = "en" | "ko"
 
 type LanguageContextProviderProps = {
   children: React.ReactNode
@@ -28,7 +29,16 @@ export default function LanguageContextProvider({
       expires: new Date("Fri, 31 Dec 9999 23:59:59 GMT"),
     })
     setLanguage(lang)
-    window.location.reload()
+
+    reload(lang)
+  }
+
+  const reload = (lang: Language) => {
+    const url = window.location.href
+
+    if (isBlogUrl(url) || isTagsUrl(url)) {
+      window.location.reload()
+    }
   }
 
   const setDefaultLanguage = () => {

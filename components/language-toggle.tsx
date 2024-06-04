@@ -29,7 +29,7 @@ export function LanguageToggle() {
         <DropdownMenuItem onClick={() => setLanguage("en")}>
           English
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setLanguage("kr")}>
+        <DropdownMenuItem onClick={() => setLanguage("ko")}>
           Korean
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -2,7 +2,13 @@
 
 import { createContext, useContext, useEffect, useState } from "react"
 import { CookiesProvider, useCookies } from "react-cookie"
-import { isBlogUrl, isTagPageUrl, isTagsUrl } from "@/lib/utils"
+import {
+  getLastPathSegment,
+  isBlogPageUrl,
+  isBlogUrl,
+  isTagPageUrl,
+  isTagsUrl,
+} from "@/lib/utils"
 
 export type Language = "en" | "ko"
 
@@ -38,6 +44,30 @@ export default function LanguageContextProvider({
 
     if (isBlogUrl(url) || isTagsUrl(url) || isTagPageUrl(url)) {
       window.location.reload()
+      return
+    }
+
+    if (isBlogPageUrl(url)) {
+      const currentUrl = window.location.href
+      const lastPathSegment = getLastPathSegment(currentUrl)
+
+      if (lastPathSegment == null) {
+        console.error()
+        return
+      }
+
+      let redirectUrl = ""
+      if (lang === "en") {
+        // strip off '-ko'
+        const koRemoved = lastPathSegment.replace("-ko", "")
+        redirectUrl = currentUrl.replace(lastPathSegment, koRemoved)
+      } else if (lang === "ko") {
+        // add '-kr'
+        const koAdded = lastPathSegment + "-ko"
+        redirectUrl = currentUrl.replace(lastPathSegment, koAdded)
+      }
+
+      window.location.href = redirectUrl
     }
   }
 

@@ -56,6 +56,15 @@ export function isBlogUrl(url: string) {
   return false
 }
 
+export function isBlogPageUrl(url: string) {
+  const segment = getSecondToLastPathSegment(url)
+  if (segment === "blog") {
+    return true
+  }
+
+  return false
+}
+
 export function isTagsUrl(url: string) {
   const segment = getLastPathSegment(url)
   if (segment === "tags") {
@@ -74,7 +83,7 @@ export function isTagPageUrl(url: string) {
   return false
 }
 
-function getLastPathSegment(url: string) {
+export function getLastPathSegment(url: string) {
   try {
     // Create a URL object
     const parsedUrl = new URL(url)
@@ -88,7 +97,7 @@ function getLastPathSegment(url: string) {
   }
 }
 
-function getSecondToLastPathSegment(url: string) {
+export function getSecondToLastPathSegment(url: string) {
   try {
     // Create a URL object
     const parsedUrl = new URL(url)

@@ -15,8 +15,8 @@ How do you feel when you encounter API endpoints like `/getAllProducts`, `/Users
 
 1. `/getAllProducts`
 
-    - **Problem**: The name includes a verb (get), which should be implied by the HTTP method (GET). It also suggests a specific action rather than a resource.
-    - **Confusion**: What if we have an endpoint like `/getProductDetails`? The verb-based naming can easily become inconsistent and lead to confusion.
+    - **Problem**: The name includes a verb (get), which should be implied by the HTTP method (GET). Including a verb in the name implies a specific action rather than a resource. In a RESTful API, everything is considered a resource, so it's better to access product information through a resource like `/products`.
+    - **Confusion**: Let's break down why `GET /getAllProducts` is not ideal for three reasons. First, "get" is redundant. Second, "getAll" is redundant with "products". Third, additional endpoints like `/getTopSellingProducts` and `/getMostRecommendedProducts` are likely to be added, leading to an endlessly growing list. In summary, verbs should be replaced with HTTP verbs, and `GET /products` alone can convey sufficient meaning.
 
 2. `/UsersList`
 

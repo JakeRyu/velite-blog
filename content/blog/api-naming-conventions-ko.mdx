@@ -1,6 +1,6 @@
 ---
 title: RESTful API 네이밍에 대한 모든 것
-description: 일관성, 가독성, 유지보수성은 좋은 API 설계의 삼위일체다. 일관된 네이밍은 개발자들이 무엇을 기대할지 알 수 있게 도와주고, 읽기 쉬운 이름은 인지 부하를 줄여주며, 유지보수 가능한 이름은 업데이트를 쉽게 만들어준다.
+description: 일관성, 가독성, 유지보수성 - 이 세가지는 좋은 API 설계의 삼위일체다. 일관된 네이밍은 개발자들이 무엇을 기대할지 알 수 있게 도와주고, 읽기 쉬운 이름은 인지적 부담을 줄여주며, 유지보수성이 좋은 이름은 업데이트를 쉽게 한다.
 date: 2024-05-30
 tags: ["api"]
 published: true
@@ -15,75 +15,82 @@ language: ko
 
 1. `/getAllProducts`
     - **Problem**: 이름에 동사(get)가 포함되어 있는데, 이는 HTTP 메서드(GET)로 표현되어야 한다. 동사를 포함한 이름은 특정 동작을 암시하기 때문에 자원이 아닌 액션을 나타낸다. RESTful API에서 모든 것은 자원(Resource)으로 간주하는데 상폼 정보는 `/products`라는 자원으로 접는하는 것이 좋다.
-    - **Confusion**: `GET /getAllProducts`를 뜯어서 보자면 세가지 이유로 좋지 않다. 첫번째로 get이 중복 사용되었다, 두번째로 `getAll`은 `products`와 의미가 중복된다. 세번째로 `/getTopSellingProducts`, `/getMostRecommendedProducts` 등으로 추가가 예상되는 엔드포인트 때문에 목록은 끝없이 늘어날 것이다. 정리하자면 동사는 Http Verb로 대신하여, `GET /products`만으로 충분한 의미를 전달할 수 있다.
+    - **Confusion**: `GET /getAllProducts`를 뜯어서 보자면 세가지 이유로 좋지 않다. 
+      1. get이 중복 사용되었다. 
+      1. `getAll`은 `products`와 의미가 중복된다.
+      1. `/getTopSellingProducts`, `/getMostRecommendedProducts` 등 앞으로 추가 예상되는 엔드포인트 때문에 목록은 끝없이 늘어날 것이다.
+      
+      정리하자면 동사는 Http Verb로 대신하여, `GET /products`만으로 충분한 의미를 전달할 수 있다.
 
 2. `/UsersList`
 
-    - **Problem**: Combining a plural noun with another noun (List) is redundant and less clear. The name should represent a resource collection.
-    - **Confusion**: If there’s a `/UserDetails`, it’s not immediately clear if it’s for a single user or multiple users. Consistency in naming is key.
+    - **Problem**: 복수 명사와 다른 명사(예, List)를 결합하는 것은 중복이고 깔끔하지 않다. 이름은 리소스 컬렉션을 나타내야 한다.
+    - **Confusion**: `/UserDetails`를 예로 들면, 단일 사용자에 대한 상세정보들인지 다중 사용자들이 대상인지 헷갈린다. 이름의 일관성이 중요하다.
 
-3. `/payments/{memberId}`
+3. `/books/{authorId}`
 
-    - **Problem**: The URI suggests that `memberId` is an identifier for payments, which can be misleading. It might imply that `memberId` is actually a payment ID.
-    - **Confusion**: Developers might assume that `/payments/{memberId}` retrieves a specific payment based on `memberId`, rather than understanding it’s related to a member. This can lead to misinterpretation and errors.
-
-
-# The Importance of Good Naming Conventions
-> Consistency, readability, and maintainability - these are the trifecta of good API design. Consistent naming helps developers know what to expect, readable names reduce the cognitive load, and maintainable names make updates a breeze.
-
-# Naming Conventions
-
-## General Guidelines
-
-1. **HTTP Verbs for Operations**: Let HTTP methods do the action-talking. Use `GET /books` instead of `/getBooks`.
-1. **Use Nouns for Resources**: Think of your resources as entities. For instance, `/users` and `/orders` are intuitive and clear.
-1. **Use Plural Names**: Plural names like `/books` make it clear you're dealing with a collection.
-1. **Use URL Parameters for Single Items**: For a single item, use a URL parameter, `{resourceId}`, immediately after the plural resource name. For example, `/users/{userId}` and `/books/{bookId}` clearly indicate that you are referencing a specific item within the collection.
-1. **Styles**:
-    - Use forward slash to indicate hierarchical relationships.
-    - Use hyphens `-` to improve readability  (`/user-orders` vs `/user_orders`).
-    - Use lowercase.
-    - Don't use trailing forward slashes.
-    - Don't use underscores `_` as they can be confused with link formatting.
-    - Don't use file extensions like /managed-devices.xml.
-
-## Structuring Resource URIs
-
-1. **Hierarchical Relationships**: Show relationships like `/users/{userId}/orders`.
-1. **Filtering, Sorting, and Pagination**: Use query parameters for these operations. For example:
-    - Filtering: `/books?author=tolkien`
-    - Sorting: `/books?sort=asc`
-    - Pagination: `/books?page=2`
-1. **Versioning**: Maintain backward compatibility and manage changes with versioned URIs. For example, use `/v1/books` to indicate version 1 of the API.
-1. **Use Singular Names to Denote Resource Archetypes**: In cases where you need to denote a specific type or archetype of a resource, use singular names within the plural collection. This helps to specify sub-categories or roles within a broader resource category while maintaining clarity and consistency. For example:
-    - `GET /user-management/users/admin`: This URI clearly indicates that you are fetching users who are of the "admin" type within the user-management context. By specifying admin, you denote a specific archetype of user. This approach avoids ambiguity and makes it clear that the request is for a subset of the user resource, specifically those with the admin role.
-1. **Use Verbs to Denote Controller Resources**: Treat controller resources like executable functions and use verbs to clearly denote actions. This helps to distinguish between standard resource operations and specific commands or operations. For example:
-    - `POST /cart-management/users/{id}/cart/checkout`: This endpoint indicates an action to checkout a user’s cart. The verb checkout makes it clear that this is a command or operation rather than a simple resource manipulation.
-    - `POST /song-management/users/{id}/playlist/play`: This URI specifies an action to play a user’s playlist. The verb play clearly indicates that this is an operation being performed on the playlist resource.
-
-By adhering to these guidelines, you can create APIs that are intuitive and easy to work with, reducing confusion and improving the developer experience.
+    - **Problem**: 개발자들은 `/books/{authorId}`가 `authorId`를 사용하여 특정 책을 가져오는 데 사용된다고 생각할 수 있다.
+    - **Confusion**: 이것은 실제로 특정 책이 아닌 저자 정보를 조회하기 때문에 혼란을 일으킬 수 있다. 이러한 오해는 결국 오류를 유발한다.
 
 
-# Common Pitfalls and How to Avoid Them
-##  Overusing Nested Resources 
+# 좋은 이름 짓기의 중요함
+> 일관성, 가독성, 유지보수성 - 이 세가지는 좋은 API 설계의 삼위일체다. 일관된 네이밍은 개발자들이 무엇을 기대할지 알 수 있게 도와주고, 읽기 쉬운 이름은 인지적 부담을 줄여주며, 유지보수성이 좋은 이름은 업데이트를 쉽게 한다.
 
-Avoid deep nesting like `/users/{userId}/orders/{orderId}/items/{itemId}`. Stick to simple, flat structures.
+# 좋은 명명 규칙
 
-1. **Flat Resource Structures:**<br />
-Instead of deeply nested routes, use flat routes with clear identifiers. For example, rather than `/users/{userId}/orders/{orderId}/items/{itemId}`, you can use `/items/{itemId}` and include the related resource identifiers in the query parameters or body if necessary.
+## 일반 지침
+
+1. **작업을 위한 HTTP 동사**: HTTP 메서드가 동작을 나타내게 하라. `/getBooks` 대신 `GET /books`를 사용하라.
+1. **리소스에는 명사를 사용하라**: 리소스를 엔터티로 생각하라. 예를 들어, `/users`와 `/orders`는 직관적이고 명확하다.
+1. **복수형 이름을 사용하라**: `/books`와 같은 복수형 이름은 컬렉션을 다루고 있음을 명확히 한다.
+1. **단일 항목에는 URL 매개변수를 사용하라**: 단일 항목의 경우, 복수형 리소스 이름 바로 뒤에 URL 매개변수 `{resourceId}`를 사용하라. 예를 들어, `/users/{userId}`와 `/books/{bookId}`는 컬렉션 내 특정 항목을 참조하고 있음을 명확히 나타낸다.
+1. **스타일**:
+    - 계층적 관계를 나타내기 위해 슬래시를 사용하라.
+    - 가독성을 높이기 위해 하이픈 `-`을 사용하라 (`/user-orders` vs `/user_orders`).
+    - 소문자를 사용하라.
+    - 슬래시로 끝내지 마라.
+    - 밑줄 `_`은 링크 서식과 혼동될 수 있으므로 사용하지 마라.
+    - `/managed-devices.xml`처럼 파일 확장자는 사용하지 마라.
+
+## URI 리소스 구조
+
+1. **계층적 관계**: `/users/{userId}/orders`와 같이 관계를 나타내라.
+2. **필터링, 정렬, 페이지 매김**: 이러한 작업에는 쿼리 매개변수를 사용하라. 예를 들어:
+    - 필터링: `/books?author=tolkien`
+    - 정렬: `/books?sort=asc`
+    - 페이지 매김: `/books?page=2`
+3. **버전 관리**: 하위 호환성을 유지하고 버전이 지정된 URI로 변경 사항을 관리하라. 예를 들어, `/v1/books`를 사용하여 API의 버전 1을 나타내라.
+4. **리소스 유형을 나타내기 위해 단수형 이름을 사용하라**: 특정 리소스 유형을 나타내야 하는 경우, 복수형 컬렉션 내에서 단수형 이름을 사용하라. 이렇게 하면 더 넓은 리소스 범주 내에서 하위 카테고리 또는 그 유형을 명확하고 일관되게 지정할 수 있다. 예를 들어,
+    - `GET /user-management/users/admin`: 이 URI는 사용자 관리 컨텍스트 내에서 "admin" 유형의 사용자를 가져온다는 것을 명확히 나타낸다. admin을 지정함으로써 특정 사용자 카테고리를 나타낸다. 이 접근 방식은 모호성을 피하고  admin 역할을 가진 사용자 리소스의 하위 집합임을 명확히 한다.
+5. **컨트롤러 리소스를 나타내기 위해 동사를 사용하라**: 컨트롤러 리소스를 실행 가능한 함수처럼 취급하고 동사를 사용하여 동작을 명확히 나타내라. 이를 통해 표준 리소스 작업과 특정 명령 또는 작업을 구분할 수 있다. 예를 들어,
+    - `POST /cart-management/users/{id}/cart/checkout`: 이 엔드포인트는 사용자의 장바구니를 체크아웃하는 동작을 나타낸다. checkout 동사는 이것이 단순한 리소스 조작이 아니라 명령 또는 작업임을 명확히 나타낸다.
+    - `POST /song-management/users/{id}/playlist/play`: 이 URI는 사용자의 재생 목록을 재생하는 동작을 지정한다. play 동사는 이것이 재생 목록 리소스에서 수행되는 작업임을 명확히 나타낸다.
+    
+    이렇게 함수를 실행하는 듯이 사용할 경우 `POST`를 사용한다.
+
+이러한 지침을 준수함으로써 직관적이고 사용하기 쉬운 API를 만들 수 있으며, 혼란을 줄이고 개발자의 경험을 향상시킬 수 있다.
+
+
+# 일반적인 함정과 이를 피하는 방법
+## 중첩된 리소스 남용
+
+`/users/{userId}/orders/{orderId}/items/{itemId}`와 같은 깊은 중첩을 피하라. 단순하고 평평한 구조를 유지하라.
+
+1. **평평한 리소스 구조**:<br />
+깊게 중첩된 경로 대신 명확한 식별자가 있는 평평한 경로를 사용하라. 예를 들어, `/users/{userId}/orders/{orderId}/items/{itemId}` 대신 `/items/{itemId}`를 사용하고, 필요 시 관련 리소스 식별자를 쿼리 매개변수나 요청 본문(request body)에 포함하라.
     ```http
     GET /items/{itemId}?userId={userId}&orderId={orderId}
     ```
-    Even if you have the item identifier and can fetch the item directly, passing `userId` and `orderId` can be beneficial. Including these parameters can save additional database calls for handling related information.
+    위에서 아이템 식별자가 있어 해당 아이템을 직접 가져올 수 있더라도, `userId`와 `orderId`를 전달하는 것이 유익할 수 있다. 이러한 매개변수를 포함하면 엔티티간의 관계를 파악하기 위한 추가 데이터베이스 호출을 줄일 수 있다.
 
-2. **Use Query Parameters:**<br />
-Use query parameters to filter and relate resources without nesting. This keeps URLs cleaner and more understandable.
+2. **쿼리 매개변수 사용:**<br />
+쿼리 매개변수를 사용하여 리소스를 필터링한다. 다음 예는 필터링 결과로 만들어진 아이템 리스트를 반환한다. `/items/orders`, `/items/users` 처럼 중첩 리소스를 피할 수 있어서 URL이 더 깔끔하고 이해하기 쉽다.
     ```http
     GET /items?userId={userId}&orderId={orderId}
     ```
 
-3. **Hypermedia as the Engine of Application State (HATEOAS):**<br />
-Implement HATEOAS to provide links to related resources, allowing clients to navigate between them without needing deep nesting in the URL structure.
+3. **애플리케이션 상태의 엔진으로서의 하이퍼미디어 (HATEOAS):**<br />
+HATEOAS를 구현하여 관련 리소스에 대한 링크를 제공하고, 클라이언트가 URL 구조에서 깊은 중첩 없이 리소스 간을 탐색할 수 있도록 하라. 클라이언트에서 아이템과 연결된 주문 정보가 필요하다면 API 응답에서 `/orders/orderId` 링크를 통해 가져올 수 있다. 응답의 구조를 보면 유일 `item`에 속한 `order`, `user`의 링크이기 때문에 중첩 URL을 사용하지 않고도 이들의 관계를 표현할 수 있다.   
     ```json
     {
       "item": {
@@ -98,8 +105,8 @@ Implement HATEOAS to provide links to related resources, allowing clients to nav
     }
     ```
 
-4. **Resource Aggregation:**<br />
-Aggregate related data into a single resource when possible. For instance, instead of retrieving an order and its items separately, you could design an endpoint that returns an order along with its items.
+4. **리소스 집계(Aggregation):**<br />
+가능한 경우 관련 데이터를 단일 리소스로 집계하라. 예를 들어, 주문과 그 항목을 별도로 가져오는 대신, 주문과 그 항목을 함께 반환하는 엔드포인트를 설계할 수 있다.
     ```http
     GET /orders/{orderId}
     ```
@@ -114,8 +121,8 @@ Aggregate related data into a single resource when possible. For instance, inste
     }
     ```
 
-5. **Resource Expansion:**<br />
-Allow clients to request related resources to be expanded inline. This can be done through query parameters that specify which related resources to include.
+5. **리소스 확장:**<br />
+클라이언트가 관련 리소스를 확장하여 요청할 수 있도록 하라. 이는 포함할 관련 리소스를 지정하는 쿼리 매개변수를 통해 수행할 수 있다.
     ```http
     GET /orders/{orderId}?expand=items,user
     ```
@@ -131,7 +138,7 @@ Allow clients to request related resources to be expanded inline. This can be do
     }
     ```
 
-By applying these strategies, you can keep your API endpoints more maintainable and user-friendly while avoiding the complexity of deeply nested structures.
+이러한 전략을 적용하면 API 엔드포인트를 더 유지 관리하기 쉽고 사용자 친화적으로 유지하면서 깊이 중첩된 구조의 복잡성을 피할 수 있다.
 
 ## Inconsistent Naming
 In a large project, different team members might name resources, endpoints, variables, and functions differently. For instance, some might use camelCase (`getUserData`), while others use snake_case (`get_user_data`), and some might even use different terms for the same concept (e.g., `userId` vs `user_id` vs `UserID`). This inconsistency can lead to confusion, errors, and increased maintenance time.

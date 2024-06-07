@@ -16,17 +16,22 @@ How do you feel when you encounter API endpoints like `/getAllProducts`, `/Users
 1. `/getAllProducts`
 
     - **Problem**: The name includes a verb (get), which should be implied by the HTTP method (GET). Including a verb in the name implies a specific action rather than a resource. In a RESTful API, everything is considered a resource, so it's better to access product information through a resource like `/products`.
-    - **Confusion**: Let's break down why `GET /getAllProducts` is not ideal for three reasons. First, "get" is redundant. Second, "getAll" is redundant with "products". Third, additional endpoints like `/getTopSellingProducts` and `/getMostRecommendedProducts` are likely to be added, leading to an endlessly growing list. In summary, verbs should be replaced with HTTP verbs, and `GET /products` alone can convey sufficient meaning.
+    - **Confusion**: Let's break down why `GET /getAllProducts` is not ideal for three reasons. 
+      1. "get" is redundant. 
+      1. "getAll" is redundant with "products". 
+      1. Additional endpoints like `/getTopSellingProducts`, `/getMostRecommendedProducts` are likely to be added, leading to an endlessly growing list. 
+    
+      In summary, verbs should be replaced with HTTP verbs, and `GET /products` alone can convey sufficient meaning.
 
 2. `/UsersList`
 
     - **Problem**: Combining a plural noun with another noun (List) is redundant and less clear. The name should represent a resource collection.
     - **Confusion**: If there’s a `/UserDetails`, it’s not immediately clear if it’s for a single user or multiple users. Consistency in naming is key.
 
-3. `/payments/{memberId}`
+3. `/books/{authorId}`
 
-    - **Problem**: The URI suggests that `memberId` is an identifier for payments, which can be misleading. It might imply that `memberId` is actually a payment ID.
-    - **Confusion**: Developers might assume that `/payments/{memberId}` retrieves a specific payment based on `memberId`, rather than understanding it’s related to a member. This can lead to misinterpretation and errors.
+    - **Problem**: Developers might think that `/books/{authorId}` is used to get a specific book using the `authorId`.
+    - **Confusion**: This can be confusing because it actually relates to the author, not a specific book. This misunderstanding can cause mistakes.
 
 
 # The Importance of Good Naming Conventions
@@ -84,7 +89,7 @@ Use query parameters to filter and relate resources without nesting. This keeps 
     ```
 
 3. **Hypermedia as the Engine of Application State (HATEOAS):**<br />
-Implement HATEOAS to provide links to related resources, allowing clients to navigate between them without needing deep nesting in the URL structure.
+Implement HATEOAS to provide links to related resources, allowing clients to navigate between them without needing deep nesting in the URL structure. If the client needs order information related to an item, it can retrieve it through the `/orders/{orderId}` link in the API response. By structuring the response to include links to the `order` and `user` that the `item` belongs to, you can express their relationships without using nested URLs.
     ```json
     {
       "item": {

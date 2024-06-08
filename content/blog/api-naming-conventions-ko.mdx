@@ -33,8 +33,11 @@ language: ko
     - **Confusion**: 이것은 실제로 특정 책이 아닌 저자 정보를 조회하기 때문에 혼란을 일으킬 수 있다. 이러한 오해는 결국 오류를 유발한다.
 
 
-# 좋은 이름 짓기의 중요함
-> 일관성, 가독성, 유지보수성 - 이 세가지는 좋은 API 설계의 삼위일체다. 일관된 네이밍은 개발자들이 무엇을 기대할지 알 수 있게 도와주고, 읽기 쉬운 이름은 인지적 부담을 줄여주며, 유지보수성이 좋은 이름은 업데이트를 쉽게 한다.
+<Callout type="warning">
+  # 좋은 이름 짓기의 중요함
+
+  일관성, 가독성, 유지보수성 - 이 세가지는 좋은 API 설계의 삼위일체다. 일관된 네이밍은 개발자들이 무엇을 기대할지 알 수 있게 도와주고, 읽기 쉬운 이름은 인지적 부담을 줄여주며, 유지보수성이 좋은 이름은 업데이트를 쉽게 한다.
+</Callout>
 
 # 좋은 명명 규칙
 
@@ -140,61 +143,61 @@ HATEOAS를 구현하여 관련 리소스에 대한 링크를 제공하고, 클�
 
 이러한 전략을 적용하면 API 엔드포인트를 더 유지 관리하기 쉽고 사용자 친화적으로 유지하면서 깊이 중첩된 구조의 복잡성을 피할 수 있다.
 
-## Inconsistent Naming
-In a large project, different team members might name resources, endpoints, variables, and functions differently. For instance, some might use camelCase (`getUserData`), while others use snake_case (`get_user_data`), and some might even use different terms for the same concept (e.g., `userId` vs `user_id` vs `UserID`). This inconsistency can lead to confusion, errors, and increased maintenance time.
+## 일관성 없는 이름 짓기
+대형 프로젝트에서는 다른 팀 구성원들이 리소스, 엔드포인트, 변수 및 함수를 다르게 명명할 수 있다. 예를 들어, 어떤 사람들은 camelCase(`getUserData`)를 사용하고, 어떤 사람들은 snake_case(`get_user_data`)를 사용하며, 같은 개념에 대해 서로 다른 용어(`userId`, `user_id`, `UserID`)를 쓰기도 한다. 이러한 일관성 없는 이름때문에 혼란과 오류가 생기고 유지보수 시간은 늘어난다.
 
-1. **Establish Naming Conventions:**<br />
-    Create a comprehensive naming convention document that all team members follow. This should cover naming for variables, functions, endpoints, database tables, and any other relevant elements.
-    > ### Naming Conventions
-    > - Variables and functions: camelCase
-    > - Database tables: snake_case
-    > - API endpoints: kebab-case
-    > - Constants: UPPER_CASE
+1. **명명 규칙 확립:**
+    모든 팀 구성원이 따를 수 있는 포괄적인 명명 규칙을 문서로 작성하라. 이 문서는 변수, 함수, 엔드포인트, 데이터베이스 테이블 및 기타 모든 요소의 이름을 다루어야 한다.
+    > ### 명명 규칙
+    > - 변수와 함수: camelCase
+    > - 데이터베이스 테이블: snake_case
+    > - API 엔드포인트: kebab-case
+    > - 상수: UPPER_CASE
 
-2. **Use Linters and Code Formatters:**<br />
-Integrate linters (e.g., ESLint for JavaScript, Spectral for OpenAPI) and code formatters (e.g., Prettier) into your development workflow. Configure them to enforce the naming conventions automatically.
+2. **린터(Linter)와 코드 포매터 사용:**<br />
+린터(예: JavaScript용 ESLint, OpenAPI용 Spectral)와 코드 포매터(예: Prettier)를 개발 워크플로에 통합하라. 이를 구성하여 명명 규칙을 자동으로 적용하게 하라.
 
-3. **Code Reviews:**<br />
-Conduct regular code reviews where naming conventions are checked. Ensure that reviewers are strict about following the agreed-upon conventions.
+3. **코드 리뷰:**<br />
+정기적인 코드 리뷰를 실시하여 명명 규칙이 잘 적용되어 있는지 확인하라. 리뷰어들이 합의된 규칙을 엄격하게 따르는지 확인하라.
     ```Markdown
-    ## Code Review Checklist
-    - [ ] Are naming conventions followed consistently?
-    - [ ] Are variable and function names meaningful and descriptive?
+    ## 코드 리뷰 체크리스트
+    - [ ] 명명 규칙이 일관되게 적용되었는가?
+    - [ ] 변수와 함수 이름이 의미 있고 설명적인가?
     ```
 
-4. **Automated CI/CD Checks:**<br />
-Implement CI/CD pipelines that include checks for naming conventions. This can prevent non-conforming code from being merged into the main codebase.
+4. **자동화된 CI/CD 검사:**<br />
+CI/CD 파이프라인에 명명 규칙 검사를 포함하라. 이를 통해 규칙을 따르지 않는 코드가 메인 코드베이스에 병합되는 것을 방지할 수 있다.
 
-5. **Documentation and Training:**<br />
-Regularly update the team on the importance of naming conventions and provide training sessions  for new team members. Documentation should be easily accessible and up-to-date.
+5. **문서화 및 교육:**<br />
+명명 규칙의 중요성을 팀에 정기적으로 알리고 새로운 팀원들을 위한 교육 세션을 제공하라. 문서는 쉽게 접근할 수 있고 최신 상태를 유지해야 한다.
 
-By implementing these solutions, you can mitigate the common pitfall of inconsistent naming and maintain a clean, understandable, and maintainable codebase.
+이상의 내용을 구현함으로써 일관성 없는 작명의 실수를 줄이고, 깔끔하고 이해하기 쉬우며 유지보수하기 쉬운 코드베이스를 유지할 수 있다.
 
-## Ignoring Standards
+## 표준 무시
 
-Imagine a team developing an API without following RESTful principles or common HTTP status codes. They might use custom status codes, like `299` for a successful creation instead of the standard `201 Created`, or they might not use proper HTTP verbs (e.g., using `GET` for creating a resource). This can lead to confusion, poor interoperability, and difficulties in maintaining and scaling the application.
+RESTful 원칙이나 일반적인 HTTP 상태 코드를 따르지 않고 API를 개발하는 팀을 상상해보라. 그들은 `201 Created` 대신 `299`와 같은 사용자 정의 상태 코드를 성공을 표현하는데 사용할 수 있으며, 적절한 HTTP 동사를 사용하지 않을 수도 있다(예: 리소스를 생성하기 위해 `GET`을 사용). 이는 혼란을 유발하고, 상호 운용성을 떨어뜨린다. 결국, 애플리케이션 유지보수 및 확장에 어려움을 초래할 수 있다.
 
-1. **Adhere to RESTful API Principles:**<br />
-Follow REST principles such as using the correct HTTP methods (GET, POST, PUT, DELETE) and proper status codes (200 OK, 201 Created, 400 Bad Request, 404 Not Found).
+1. **RESTful API 원칙 준수:**<br />
+올바른 HTTP 메서드(GET, POST, PUT, DELETE)와 적절한 상태 코드(200 OK, 201 Created, 400 Bad Request, 404 Not Found)를 사용하여 REST 원칙을 따르라.
     ```http
     POST /users
     201 Created
     Location: /users/{userId}
     ```
 
-2. **Use Standard HTTP Status Codes:**<br />
-Always use standard HTTP status codes to indicate the result of an HTTP request. This ensures that clients can understand and handle responses correctly.
+2. **표준 HTTP 상태 코드 사용:**<br />
+항상 표준 HTTP 상태 코드를 사용하여 HTTP 요청의 결과를 나타내라. 이는 클라이언트가 응답을 올바르게 이해하고 처리할 수 있도록 보장한다.
     ```http
-    200 OK – Request succeeded
-    201 Created – Resource created successfully
-    400 Bad Request – Client error in the request
-    401 Unauthorized – Authentication required
-    404 Not Found – Resource not found
-    500 Internal Server Error – Server encountered an error
+    200 OK – 요청 성공
+    201 Created – 리소스가 성공적으로 생성됨
+    400 Bad Request – 요청에 클라이언트 오류가 있음
+    401 Unauthorized – 인증 필요
+    404 Not Found – 리소스를 찾을 수 없음
+    500 Internal Server Error – 서버에 오류 발생
     ```
 
-3. **Use Standardized Documentation:**<br />
-Document your API using standard formats like OpenAPI (formerly Swagger). This ensures that your API is well-documented and can be easily understood by other developers.
+3. **표준화된 문서 사용:**<br />
+OpenAPI(이전의 Swagger)와 같은 표준 형식을 사용하여 API를 문서화하라. API 문서화를 잘하면 다른 개발자들이 쉽게 이해할 수 있다.
     ```yaml
     # openapi.yaml
     openapi: 3.0.0
@@ -204,10 +207,10 @@ Document your API using standard formats like OpenAPI (formerly Swagger). This e
     paths:
       /users:
         get:
-          summary: Retrieve a list of users
+          summary: 사용자 목록 조회
           responses:
             '200':
-              description: A list of users
+              description: 사용자 목록
               content:
                 application/json:
                   schema:
@@ -215,23 +218,33 @@ Document your API using standard formats like OpenAPI (formerly Swagger). This e
                     items:
                       $ref: '#/components/schemas/User'
     ```
+    이상의 해결책을 따름으로써 프로젝트가 업계 표준을 준수하여 더 신뢰할 수 있고, 유지보수하기 쉬우며, 그로 인해 다른 시스템과 쉽게 통합할 수 있도록 한다.
 
-    By following these solutions, you can ensure that your projects adhere to industry standards, making them more reliable, maintainable, and easier to integrate with other systems.
+# API 문서화의 중요성
 
-# Importance of API Documentation
+중앙화된 API 문서는 일관된 명명 규칙을 유지하고 실수를 피하는 데 크게 도움이 될 수 있다. API 문서가 중요한 이유는 다음과 같다.
 
-Having a centralized API documentation can significantly help in maintaining consistent naming conventions and avoiding mistakes. Here's why API documentation is crucial and some additional thoughts on it:
+1. **단일 참조문서:**<br />
+잘 관리된 API 문서는 모든 엔드포인트, 매개변수, 데이터 모델에 대한 단일 출처 역할을 한다. 이를 통해 모든 팀 구성원이 동일한 명명 규칙을 따르도록 돕는다.
 
-1. **Centralized Reference:**<br />
-A well-maintained API documentation serves as a single source of truth for all endpoints, parameters, and data models. This helps all team members adhere to the same naming conventions.
-1. **Consistency:**<br />
-By documenting your API, you ensure that everyone understands and follows the established conventions. It reduces the risk of inconsistent naming across different parts of the API.
-1. **Ease of Onboarding:**<br />
-New team members can quickly get up to speed by referring to the documentation. They can see the correct naming conventions and structures in one place.
-1. **Improved Collaboration:**<br />
-With clear documentation, developers, testers, and stakeholders can easily understand how the API works, facilitating better collaboration and reducing miscommunication.
-1. **Automated Documentation Tools:**<br />
-Tools like Swagger/OpenAPI, Postman, and others can generate documentation automatically from your codebase. This ensures that your documentation is always up-to-date with the latest changes.
+2. **일관성:**<br />
+API를 문서화함으로써 모든 사람이 구현된 내용을 이해하고 따르게 된다. 이는 API의 다양한 부분에서 일관성 없는 작명의 위험을 줄여준다.
 
-# Conclusion
-Naming conventions might seem minor, but they're the backbone of a good API. Start implementing these practices today and see the difference. Have any tips or questions? Get in touch!
+3. **온보딩 용이성:**<br />
+새로운 팀원이 이 문서를 참고하여 빠르게 적응할 수 있다. 문서를 통해 올바른 명명 규칙과 구조를 한눈에 확인할 수 있다.
+
+4. **협업 향상:**<br />
+명확한 문서를 통해 개발자, 테스터 및 이해관계자들이 API의 작동 방식을 쉽게 이해할 수 있어, 협업이 더 원활해지고 오해가 줄어든다.
+
+5. **자동화된 문서 도구:**<br />
+Swagger/OpenAPI, Postman 등의 도구는 코드베이스에서 자동으로 문서를 생성할 수 있다. 이를 통해 문서가 항상 최신 변경 사항과 일치하도록 유지할 수 있다.
+
+# 마무리와 다음 단계
+- 명명 규칙은 사소해 보일 수 있지만, 좋은 API의 핵심이다.
+- 지금까지 살펴본 가이드라인을 구현하고 변화를 느껴보라. 팁이나 질문이 있나면 연락 주세요!
+- API 문서를 먼저 작성하고 팀과 커뮤니케이션하자. 개발 후 수정하는 많은 시간을 줄일 수 있다.
+- 코드베이스를 기반으로 문서를 자동으로 만들어 주는 프로세스를 만들자.
+
+<Callout type="warning">
+질문 또는 좋은 팁을 알고 있다면 아래 채널을 통해 연락 바랍니다. 피드백을 통해 이 글을 더욱 보완할 수 있기를 바랍니다.
+</Callout>

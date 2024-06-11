@@ -6,6 +6,7 @@ import {
   getLastPathSegment,
   isBlogPageUrl,
   isBlogUrl,
+  isHomeUrl,
   isTagPageUrl,
   isTagsUrl,
   stripQueryParameters,
@@ -54,7 +55,7 @@ export default function LanguageContextProvider({
       return
     }
 
-    if (isTagsUrl(url) || isTagPageUrl(url)) {
+    if (isTagsUrl(url) || isTagPageUrl(url) || isHomeUrl(url)) {
       window.location.reload()
       return
     }

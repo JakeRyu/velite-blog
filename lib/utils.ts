@@ -83,14 +83,17 @@ export function isTagPageUrl(url: string) {
   return false
 }
 
+export function isHomeUrl(url: string) {
+  const segments = getNonEmptyPathSegments(url)
+
+  // No segment means it's base url
+  return segments.length === 0
+}
+
 export function getLastPathSegment(url: string) {
   try {
-    // Create a URL object
-    const parsedUrl = new URL(url)
-    // Get the pathname from the URL object and split it by '/'
-    const pathSegments = parsedUrl.pathname.split("/")
-    // Return the last non-empty segment
-    return pathSegments.filter((segment) => segment).pop()
+    const segments = getNonEmptyPathSegments(url)
+    return segments.pop()
   } catch (error) {
     console.error("Invalid URL provided:", error)
     return null
@@ -99,18 +102,13 @@ export function getLastPathSegment(url: string) {
 
 export function getSecondToLastPathSegment(url: string) {
   try {
-    // Create a URL object
-    const parsedUrl = new URL(url)
-    // Get the pathname from the URL object and split it by '/'
-    const pathSegments = parsedUrl.pathname.split("/")
-    // Filter out empty segments (e.g., from leading or trailing slashes)
-    const filteredSegments = pathSegments.filter((segment) => segment)
+    const segments = getNonEmptyPathSegments(url)
     // Check if there are at least two segments
-    if (filteredSegments.length < 2) {
+    if (segments.length < 2) {
       return null // or throw an error or return a specific value
     }
     // Return the second-to-last segment
-    return filteredSegments[filteredSegments.length - 2]
+    return segments[segments.length - 2]
   } catch (error) {
     console.error("Invalid URL provided:", error)
     return null
@@ -129,7 +127,13 @@ export function stripQueryParameters(url: string) {
   }
 }
 
-// Example usage
-const urlWithQuery = "http://localhost:3000/blog?page=2"
-const urlWithoutQuery = stripQueryParameters(urlWithQuery)
-console.log(urlWithoutQuery) // Output: "http://localhost:3000/blog"
+function getNonEmptyPathSegments(url: string) {
+  // Create a URL object
+  const parsedUrl = new URL(url)
+  // Get the pathname from the URL object and split it by '/'
+  const pathSegments = parsedUrl.pathname.split("/")
+  // Filter out empty segments (e.g., from leading or trailing slashes)
+  const filteredSegments = pathSegments.filter((segment) => segment)
+
+  return filteredSegments
+}

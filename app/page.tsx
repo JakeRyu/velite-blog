@@ -4,9 +4,12 @@ import { cn, sortPosts } from "@/lib/utils"
 import { posts } from "#site/content"
 import Link from "next/link"
 import { PostItem } from "@/components/post-item"
+import { getLanguageCookie } from "./serverUtils"
 
 export default function Home() {
-  const latestPosts = sortPosts(posts).slice(0, 5)
+  const language = getLanguageCookie()
+  const postsInLanguage = posts.filter((post) => post.language === language)
+  const latestPosts = sortPosts(postsInLanguage).slice(0, 5)
   return (
     <>
       <section className="space-y-6 pb-8 pt-6 md:pb-12 md:mt-10 lg:py-32">
@@ -17,7 +20,7 @@ export default function Home() {
           <p className="max-w-[42rem] mx-auto text-muted-foreground sm:text-xl text-balance">
             Code, Connect, Create: Insights from a Full-Stack Enthusiast.
           </p>
-          <div className="flex flex-col gap-4 justify-center sm:flex-row">
+          <div className="mt-5 flex flex-col gap-4 justify-center sm:flex-row">
             <Link
               href="/blog"
               className={cn(buttonVariants({ size: "lg" }), "w-full sm:w-fit")}

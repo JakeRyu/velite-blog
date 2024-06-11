@@ -11,7 +11,7 @@ import { Globe } from "lucide-react"
 import { Language, useLanguage } from "@/context/language-context"
 
 export function LanguageToggle() {
-  const { selectLanguage } = useLanguage()
+  const { language, selectLanguage } = useLanguage()
 
   const setLanguage = (lang: Language) => {
     selectLanguage(lang)
@@ -26,10 +26,16 @@ export function LanguageToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setLanguage("en")}>
+        <DropdownMenuItem
+          onClick={() => setLanguage("en")}
+          disabled={language === "en"}
+        >
           English
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setLanguage("ko")}>
+        <DropdownMenuItem
+          onClick={() => setLanguage("ko")}
+          disabled={language === "ko"}
+        >
           Korean
         </DropdownMenuItem>
       </DropdownMenuContent>

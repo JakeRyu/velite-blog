@@ -33,18 +33,45 @@ export default async function AboutPage() {
           </p>
         </div>
         <div className="text-muted-foreground text-lg py-4">
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum
+          <p className="mb-3">
+            I was born and raised in South Korea, where I got my education and
+            started my journey as a web developer. An exciting project with
+            Hyundai Motor brought me to the UK, and now I happily live and work
+            here as a full-stack developer.
+          </p>
+
+          <p className="mb-3">
+            I&apos;ve been in web programming since 2000, and it&apos;s been
+            amazing to see and be part of the evolution of web applications. My
+            career has taken me through a variety of projects, from large-scale
+            ERP systems to mobile investment apps for startups, with a strong
+            focus on .NET-based projects.
+          </p>
+
+          <p className="mb-3">
+            In my work, I love using{" "}
+            <span className="italic font-medium">Clean Architecture</span> and{" "}
+            <span className="italic font-medium">
+              Domain-Driven Design (DDD)
+            </span>{" "}
+            principles. <span className="italic font-medium">Clean coding</span>{" "}
+            and{" "}
+            <span className="italic font-medium">
+              Test-Driven Development (TDD)
+            </span>{" "}
+            are very important to me — they help me create reliable and
+            maintainable software.
+          </p>
+
+          <p className="mb-3">
+            When I&apos;m not coding, I enjoy watching English Premier League
+            (EPL) matches. I also love attending developer conferences and
+            diving into a good book, whether it&apos;s a novel or a
+            self-improvement guide.
           </p>
           <p className="text-xl mt-9 text-blue-400">
             <Link href="https://portfolio.jakeryu.com" target="_blank">
-              PORTFOLIO
+              PORTFOLIO →
             </Link>
           </p>
         </div>

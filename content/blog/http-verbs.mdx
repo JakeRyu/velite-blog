@@ -34,11 +34,14 @@ HTTP verbs provide the action counterpart to the noun-based resource. The primar
 | 409 Conflict | Request could not be processed because of conflict.   |
 | 500 Internal Server Error | An error occurred on the server.         |
 
+# POST
+The POST method is used to create resources. Creating a resource is one of the actions that change the state of an application, so caution should be taken when performing this action multiple times. If two identical POST requests are made, it is likely that two resources containing the same data will be created. This is described as being non-idempotent. Therefore, use the POST verb only for resource requests that do not require idempotency.
 
-# POST 
-The POST method is used to create resources. Note that it is neither safe (as it changes status) nor idempotent. Making two identical POST requests is likely to result in creating two resources containing the same data. It is therefore recommended to use the POST verb for non-idempotent resource requests.
+If idempotency is required, use PUT. In this case, idempotency is ensured by updating the resource if the client provides a resource ID, or creating a new resource if not.
 
-Additionally, POST can be used to trigger functions. Functions that may take a longer time to complete should immediately return a 202(Accepted) with a link to check the status of the process during its completion. This is an exceptional case where you use a verb with resources as follows:
+On the other hand, POST is used to trigger endpoints that act like functions. Endpoints that may take a long time to complete should immediately return a 202 (Accepted) and provide a link to check the status of the process while it completes. The client can periodically call this link to check the completion of the task and inform the user.
+
+This exceptional use of the POST method allows for exceptions in endpoint naming. Both nouns and verbs can be used together, formatted like function names as follows:
 
 - **POST /saving-accounts/calculate-interest**
 - **POST /members/import-data**
@@ -417,6 +420,20 @@ Allow: GET, POST, OPTIONS
 <Callout type="warning">
 The HEAD method is used to retrieve headers without a response body, useful for checking resource existence and metadata. The OPTIONS method describes the communication options for a resource, useful for discovering supported HTTP methods and CORS preflight requests.
 </Callout>
+
+# Conclusion
+
+In this article, we discussed how to use various HTTP methods on collection and item endpoints, compared them in terms of idempotency, and highlighted important considerations. Each method serves a unique purpose and use case, and using them correctly is crucial for the efficiency and stability of web applications.
+
+- **GET**: Used to retrieve resources, and is both idempotent and safe.
+- **POST**: Used to create new resources, and is not idempotent.
+- **PUT**: Used to replace entire resources, and is idempotent.
+- **PATCH**: Used to partially modify resources, and is not idempotent by default.
+- **DELETE**: Used to remove resources, and is idempotent.
+- **HEAD**: Used to retrieve headers without the response body, and is idempotent.
+- **OPTIONS**: Used to describe communication options for a resource, and is idempotent.
+
+Understanding the characteristics of each method and how to use them appropriately can prevent many issues in API design and implementation. By considering idempotency, you can ensure that requests work as intended and reduce unnecessary load. With this understanding, we hope you can build more stable and efficient web services.
 
 ### Footnotes
 

@@ -1,6 +1,6 @@
 ---
 title: Http 메서드 - 실전에서 자주 헷갈리는 개념 정리
-description: 웹 개발에서 HTTP 메서드는 클라이언트와 서버 간의 소통을 원활하게 한다. HTTP 동사(메서드)는 명사 기반 자원에 대한 동작을 제공하는데 GET, POST, PUT, DELETE 등의 메서드를 통해 데이터를 관리한다.
+description: 웹 개발에서 HTTP 메서드는 클라이언트와 서버 간의 소통을 원활하게 한다. HTTP 동사(메서드)는 명사로 표현하는 자원에 대한 동작을 나타낸다. GET, POST, PUT, DELETE 등의 메서드를 통해 데이터를 관리한다.
 date: 2024-06-10
 tags: ["api"]
 published: true
@@ -34,17 +34,29 @@ language: ko
 | 409 Conflict | 충돌로 인해 요청을 처리할 수 없음. |
 | 500 Internal Server Error | 서버에서 오류가 발생함. |
 
-# POST
-POST 메서드는 리소스를 생성하는 데 사용된다. 리소스 생성은 애플리케이션의 상태를 변경하는 행위 중 하나이기 때문에 그 동작을 여러 번 수행하는 것에 주의해야 한다. 동일한 두 개의 POST 요청을 하면 동일한 데이터를 포함하는 두 개의 리소스가 생성될 가능성이 크다. 이를 멱등성[^3]이 없다고 표현한다. 따라서 멱등성이 필요없는 리소스 요청에만 POST 동사를 사용하자. 멱등성이 필요한 경우에는 PUT을 사용하여 생성 또는 업데이트가 자동으로 관리되도록 할 수 있다.
 
-한편으로, POST는 함수처럼 동작하는 엔드포인트를 트리거하는 데 사용된다. 완료하는 데 시간이 오래 걸릴 수 있는 함수는 202(Accepted)를 즉시 반환하고, 과정이 완료되는 동안 상태를 확인할 수 있는 링크를 제공해야 한다. 이것은 엔드포인트 작명에 동사를 사용하는 예외적인 경우이다.
+API를 설계할 때, 컬렉션(Collection)과 아이템(Item) 엔드포인트를 구별하는 것은 매우 중요하다. 이를 통해 클라이언트와 서버 간의 통신을 명확하고 효율적으로 할 수 있다.
+
+- **컬렉션 엔드포인트**: 여러 리소스의 집합을 나타낸다. 일반적으로 복수형 명사를 사용하여 표현된다. 예를 들어, `/users`는 모든 사용자 리소스의 컬렉션을 나타낸다.
+- **아이템 엔드포인트**: 단일 리소스를 나타낸다. 일반적으로 식별자를 포함하여 표현된다. 예를 들어, `/users/123`은 특정 ID를 가진 사용자 리소스를 나타낸다.
+
+컬렉션과 아이템 엔드포인트의 차이를 이해한 후, POST 메서드의 사용법을 알아보자.
+
+# POST
+POST 메서드는 리소스를 생성하는 데 사용된다. 리소스 생성은 애플리케이션의 상태를 변경하는 행위 중 하나이기 때문에 그 동작을 여러 번 수행하는 것에 주의해야 한다. 동일한 두 개의 POST 요청을 하면 동일한 데이터를 포함하는 두 개의 리소스가 생성될 가능성이 크다. 이를 멱등성[^3]이 없다고 표현한다. 따라서 멱등성이 필요없는 리소스 요청에만 POST 동사를 사용하자. 
+
+멱등성이 필요한 경우에는 PUT을 사용한다. 이때, 클라이언트가 리소스 ID를 제공하면 리소스를 업데이트하고 그렇지 않다면 새로운 리소스를 생성하는 것으로 멱등성을 보장한다.
+
+한편으로, POST는 함수처럼 동작하는 엔드포인트를 트리거하는 데 사용된다. 완료하는 데 시간이 오래 걸릴 수 있는 함수는 202(Accepted)를 즉시 반환하고, 작업이 완료되는 동안 상태를 확인할 수 있는 링크를 제공해야 한다. 클라이언트는 그 링크를 주기적으로 호출하여 작업완료를 확인하고 사용자에게 알려준다. 
+
+POST 매서드의 이런 예외적인 활용법은 엔트포인트 작명에도 예외를 허용한다. 명사와 동사를 같이 사용해서 함수명처럼 작성한다. 
 
 - **POST /saving-accounts/calculate-interest**
 - **POST /members/import-data**
 
-## POST on a Collection or Item Endpoint?
+## POST는 컬렉션 엔드포인트에서 사용한다
 
-The POST method is used to create a new resource at a collection endpoint. For instance, to create a new user, you can send a POST request to the `/users` endpoint.
+POST 메서드는 컬렉션 엔드포인트에 새로운 리소스를 생성하는 데 사용된다. 예를 들어, 새로운 사용자를 생성하려면 `/users` 엔드포인트에 POST 요청을 보낼 수 있다.
 
 ```Http
 POST /users
@@ -54,9 +66,9 @@ POST /users
 }
 ```
 
-This request creates a new user, and the server responds with the ID of the newly created user.
+이 요청은 새 사용자를 생성한 후, 서버는 새로 생성된 사용자의 ID를 응답에 포함시킨다.
 
-**Response:**
+**응답:**
 
 ```Http
 201 Created
@@ -67,11 +79,11 @@ Location: /users/123
   "email": "johndoe@example.com"
 }
 ```
-In this example, the POST method is used to add a new user to the /users **collection**.
+위 예제에서 `/users` **collection** 엔드포인트에 POST 메서드를 사용하여 새로운 사용자를 생성했다.
 
-## Why POST is Not Used for Item Endpoints
+## 아이템 엔드포인트에 POST를 사용하지 않는 이유
 
-Item endpoints already include an ID that identifies a specific resource. Therefore, a POST request is not appropriate. For example, if the user data already exists at `/users/123`, the following POST request would be incorrect:
+아이템 엔드포인트는 이미 특정 리소스를 식별하는 ID를 포함하고 있다. 따라서 POST 요청은 적절하지 않다. 예를 들어, 사용자 데이터가 이미 `/users/123`에 존재하는 경우, 다음과 같은 POST 요청은 잘못된 것이다:
 
 ```Http
 POST /users/123
@@ -81,29 +93,24 @@ POST /users/123
 }
 ```
 
-This request doesn't make sense because POST is used to create new resources, and trying to create a new resource at an existing resource's endpoint is illogical. Instead, you should use the PUT or PATCH methods to update an existing resource.
-
+이 요청은 새로운 리소스를 생성하기 위해 POST를 사용하는 것이므로, 기존 리소스의 엔드포인트에 새로운 리소스를 생성하려는 것은 논리적으로 맞지 않는다. 대신, 기존 리소스를 업데이트하려면 PUT 또는 PATCH 메서드를 사용해야 한다.
 
 # GET
-The GET method is used to retrieve a representation of a resource. This is idempotent which means
-calling it once has the same effect as calling it 10 times. This should never modify any
-resources on the server. GET verbs can retrieve both a collection or a single item. For
-the collection of items, use pagination, sorting, and filtering to navigate through big
-lists.
+GET 메서드는 리소스를 조회하는 데 사용된다. 이는 멱등성(idempotency)을 가지며, 한 번 호출하는 것과 10번 호출하는 것이 동일한 효과를 가진다. 이 메서드는 서버의 어떤 리소스도 수정해서는 안 된다. 조회한다는 행위의 특성상 GET 동사는 컬렉션과 단일 아이템 모두를 가져오는 데 사용할 수 있다. 볼륨이 큰 리스트를 가져올때는 페이지네이션, 정렬 및 필터링을 사용하자.
 
-## Why GET Can Be Used for Both Collection and Item Endpoints
-The GET method can be used for both collection and item endpoints because its primary purpose is to fetch data, whether it's a list of resources or a specific resource.
+## 왜 GET은 컬렉션 및 아이템 엔드포인트에 모두 사용할 수 있는가?
+GET 메서드는 데이터를 가져오는 것이 주요 목적이므로 컬렉션 및 아이템 엔드포인트에 모두 사용할 수 있다. 이는 리소스의 목록이든 특정 리소스든 데이터를 가져오는 역할만 하기 때문이다.
 
-## GET on a Collection Endpoint
-When you use GET on a collection endpoint, it retrieves a list of resources. For example, to get a list of users, you would send a GET request to the `/users` endpoint.
+## 컬렉션 엔드포인트에서의 GET
+컬렉션 엔드포인트에서 GET을 사용하면 리소스의 리스트를 가져온다. 예를 들어, 사용자 리스트를 가져오려면 `/users` 엔드포인트에 GET 요청을 보낸다.
 
 ```Http
 GET /users
 ```
 
-This request retrieves all users, and the server responds with a list of user objects.
+이 요청은 모든 사용자를 가져오며, 서버는 사용자 객체의 리스트를 응답한다.
 
-**Response:**
+**응답:**
 
 ```Http
 200 OK
@@ -121,18 +128,18 @@ This request retrieves all users, and the server responds with a list of user ob
 ]
 ```
 
-In this example, the GET method is used to fetch all users in the /users collection.
+이 예제에서 GET 메서드는 `/users` 컬렉션에 있는 모든 사용자를 가져오는 데 사용된다.
 
-## GET on an Item Endpoint
-When you use GET on an item endpoint, it retrieves a specific resource identified by its ID. For example, to get a specific user with the ID 123, you would send a GET request to the `/users/123` endpoint.
+## 아이템 엔드포인트에서의 GET
+아이템 엔드포인트에서 GET을 사용하면 ID로 식별된 특정 리소스를 가져온다. 예를 들어, ID가 123인 특정 사용자를 가져오려면 `/users/123` 엔드포인트에 GET 요청을 보낸다.
 
 ```Http
 GET /users/123
 ```
 
-This request retrieves the user with the ID 123, and the server responds with the user object.
+이 요청은 ID가 123인 사용자를 가져오며, 서버는 해당 사용자 객체를 응답한다.
 
-**Response:**
+**응답:**
 
 ```Http
 200 OK
@@ -142,27 +149,26 @@ This request retrieves the user with the ID 123, and the server responds with th
   "email": "johndoe@example.com"
 }
 ```
-In this example, the GET method is used to fetch a single user from the `/users` collection. 
+
+이 예제에서 GET 메서드는 `/users` 컬렉션에서 단일 사용자를 가져오는 데 사용된다.
+
 
 <Callout type="warning">
-The GET method is versatile and can be used to retrieve both collections and individual items. It is idempotent and does not alter the state of resources on the server, making it suitable for read-only operations.
+GET 메서드는 다목적으로 사용할 수 있으며, 컬렉션과 개별 항목 모두를 가져오는 데 사용할 수 있다. 이 메서드는 멱등성을 가지며 서버의 리소스 상태를 변경하지 않기 때문에 읽기 전용 작업에 적합하다.
 </Callout>
 
-# PUT 
-The PUT method is most often utilized for UPDATE capabilities. This replaces the whole object while
-PATCH partially replaces the object. However, PUT can also be used to create a
-resource when the resource id is chosen by the client instead of by the server. As the
-client send an id, the server can create or update a resource depending on its
-existence, a.k.a. UPSERT.
+# PUT
+PUT 메서드는 주로 업데이트 기능에 사용된다. 이 메서드는 객체 전체를 덮어쓰고, PATCH는 객체를 부분적으로 대체한다. 그런데 PUT은 클라이언트가 리소스 ID를 제공할 때 리소스를 생성하는 데에도 사용할 수 있다. 클라이언트가 ID를 보내면 서버는 리소스의 존재 여부에 따라 리소스를 생성하거나 업데이트할 수 있다. 이를 편하게 업서트(UPSERT)라고 표현하기도 한다.
 
-On a successful update, return a 200 (or a 204 if returning no content in the body) from a PUT. If you are using PUT to create, return HTTP status of 201 on its successful creation. A body in the response
-is optional; remember that providing one consumes more bandwidth. Returning a link via a Location header during its creation is not necessary since the client already sets the resource ID. It is recommended to keep PUT requests idempotent, and use POST for non-idempotent requests.
+업데이트가 성공하면, PUT 요청에 대해 200(또는 본문에 내용을 반환하지 않는 경우 204)을 반환한다. 만약 PUT을 사용하여 리소스를 생성하는 경우, 성공적인 생성 시 HTTP 상태 코드 201을 반환한다. 응답에 본문(body)을 포한하는 것은 선택 사항이며, 제공한다면 더 많은 대역폭을 소비한다는 점을 염두에 두자. 
 
-## Why PUT Can Be Used for Both Creating and Updating Resources
-The PUT sends a complete representation of a resource to the server. If the resource exists, it is updated; if it does not exist, it can be created.
+리소스를 생성할 때 클라이언트가 이미 리소스 ID를 설정했기 때문에 Location 헤더를 통해 링크를 반환할 필요는 없다. PUT 요청은 멱등성을 유지하는 것이 좋으며, 멱등성이 필요하지 않은 요청에는 POST를 사용하자.
 
-## PUT on an Item Endpoint
-When you use PUT on an item endpoint, it updates the resource identified by its ID. For example, to update the user with ID 123, you would send a PUT request to the `/users/123` endpoint.
+## 왜 PUT은 리소스 생성과 업데이트에 모두 사용될 수 있는가
+PUT 메서드는 리소스에 대한 모든 속성을 서버로 전송한다. 리소스 그 자체가 전송되기 때문에 업데이트가 가능하며, 존재하지 않으면 생성될 수 있다.
+
+## 아이템 엔드포인트에서의 PUT
+아이템 엔드포인트에서 PUT을 사용하면 ID로 식별된 리소스를 업데이트한다. 예를 들어, ID가 123인 사용자를 업데이트하려면 `/users/123` 엔드포인트에 PUT 요청을 보낸다.
 
 ```http
 PUT /users/123
@@ -171,9 +177,10 @@ PUT /users/123
   "email": "janedoe@example.com"
 }
 ```
-This request updates the user with ID 123, and the server responds with a status indicating the outcome.
 
-**Response:**
+이 요청은 ID가 123인 사용자를 업데이트하며, 서버는 결과를 나타내는 상태를 응답한다.
+
+**응답:**
 
 ```http
 200 OK
@@ -183,9 +190,8 @@ This request updates the user with ID 123, and the server responds with a status
   "email": "janedoe@example.com"
 }
 ```
-
-## PUT for Creating a Resource
-If the resource does not exist and the client provides the resource ID, the PUT method can be used to create the resource. For example, if there is no user with ID 123, the same PUT request would create a new user with that ID.
+## 리소스를 생성하기 위한 PUT
+리소스가 존재하지 않고 클라이언트가 리소스 ID를 제공하는 경우, PUT 메서드를 사용하여 리소스를 생성할 수 있다. 예를 들어, ID가 123인 사용자가 없는 경우, 동일한 PUT 요청은 해당 ID로 새로운 사용자를 생성한다.
 
 ```http
 PUT /users/123
@@ -195,7 +201,7 @@ PUT /users/123
 }
 ```
 
-**Response:**
+**응답:**
 
 ```http
 201 Created
@@ -206,21 +212,22 @@ PUT /users/123
 }
 ```
 
+동일한 요청이지만 응답으로 받는 Http 상태 코드를 보고 생성과 업데이트 여부를 확인할 수 있다.
+
 <Callout type="warning">
-PUT is idempotent and requires a complete representation of the resource. When used on an item endpoint, it can either update the existing resource or create a new one if it does not exist. PUT __should not be used on collection endpoints__ as it operates on individual resources identified by their IDs.
+PUT 메스드는 멱등성을 가지며 리소스의 완전체를 필요로 한다. 아이템 엔드포인트에서 사용될 때, 기존 리소스를 업데이트하거나 존재하지 않는 경우 새로 생성할 수 있다. PUT은 개별 리소스를 ID로 식별하여 작업하므로 **컬렉션 엔드포인트에 사용해서는 안 된다**.
 </Callout>
 
 # PATCH
-The PATCH method is used for modify capabilities. The request only contains the changes to the resource, and not the complete resource. It is neither safe nor idempotent according to the HTTP specifications. If the outcome should be idempotent, use PUT with a whole object. 
+PATCH 메소드는 리소스를 수정하려고 사용한다. 이 요청에는 리소스의 일부 변경 사항만 포함한다. HTTP 규격에 따르면 멱등성 측면에서 안전하지 않다. 요청 후 결과가 멱등성을 가져야 한다면 전체 객체를 포함하는 PUT을 사용하자.
 
-PUT / PATCH are the action to an item. If a request is made to a collection URI (without an id), return
-405 (Method Not Allowed), unless you want to update every resource in the entire collection.
+PUT / PATCH는 아이템에 대한 액션이다. 요청하는 컬렉션 URI에 ID가 없다면 405(Method Not Allowed)를 반환한다. ID 없이 컬렉션 엔드포인트에 수정 요청을 보낸다는 건 컬렉션의 모든 리소스를 수정하겠다는 의미로 해석할 수 있는데 일반적인 경우라 할 수 없다. 
 
-## Why PATCH is Used for Partial Updates
-The PATCH method is designed for situations where you need to update only certain fields of a resource without modifying the entire resource. This makes PATCH more efficient than PUT when only partial updates are needed.
+## PATCH가 부분 업데이트에 사용되는 이유
+PATCH 메소드는 리소스의 전체를 수정하지 않고 특정 필드만 업데이트해야 하는 상황을 위해 설계되었다. 부분 업데이트만 필요할 때 PATCH가 PUT보다 더 효율적이라 좋다.
 
-## PATCH on an Item Endpoint
-When you use PATCH on an item endpoint, it applies partial modifications to the resource identified by its ID. For example, to update only the email of the user with ID 123, you would send a PATCH request to the `/users/123` endpoint.
+## 아이템 엔드포인트에서의 PATCH
+아이템 엔드포인트에서 PATCH를 사용하면 ID로 식별된 리소스에 부분적인 수정을 적용한다. 예를 들어, ID가 123인 사용자의 이메일만 업데이트하려면 `/users/123` 엔드포인트에 PATCH 요청을 보낸다.
 
 ```http
 PATCH /users/123
@@ -228,9 +235,9 @@ PATCH /users/123
   "email": "newemail@example.com"
 }
 ```
-This request updates the email field of the user with ID 123, and the server responds with a status indicating the outcome.
+이 요청은 ID가 123인 사용자의 이메일 필드를 업데이트하며, 서버는 결과를 나타내는 상태를 응답으로 보낸다.
 
-**Response:**
+**응답:**
 
 ```http
 200 OK
@@ -241,28 +248,27 @@ This request updates the email field of the user with ID 123, and the server res
 }
 ```
 
-## When to Use PATCH
-Use the PATCH method when you need to make partial updates to a resource. PATCH is particularly useful when:
+## 언제 PATCH를 사용해야 하는가
+리소스를 부분적으로 업데이트해야 할 때 PATCH 메소드를 사용한다. PATCH는 다음과 같은 경우에 특히 유용하다.
 
-- You need to update a few fields of a resource.
-- The resource is large, and sending the entire resource representation would be inefficient.
-- You want to avoid accidentally overwriting other fields of the resource.
+- 리소스의 몇몇 필드만 업데이트해야 할 때.
+- 리소스가 커서 전체 리소스를 전송하는 것이 비효율적일 때.
+- 리소스의 다른 필드를 실수로 덮어쓰는 것을 피하고자 할 때 그렇다.
 
-## Idempotency of PUT and PATCH
-While PATCH is not idempotent by default, you can design your PATCH operations to be idempotent by ensuring that applying the same PATCH request multiple times yields the same result. However, this requires careful consideration and implementation.
+## PUT와 PATCH의 멱등성
+PATCH는 기본적으로 멱등성이 아니지만, 동일한 PATCH 요청을 여러 번 적용해도 동일한 결과가 나오도록 설계하면 멱등성이 될 수 있다. 그러나 이는 신중한 고려하여 구현해야 한다. 각 메서드에 대한 멱등성은 다음과 같다.
 
-### Idempotency in PUT:
+### PUT에서의 멱등성:
 
-- The PUT method is designed to replace the entire resource at the given URL with the provided data. If you send the same PUT request multiple times, the state of the resource remains the same after each request, making it idempotent.
+- PUT 메소드는 주어진 URL에서 전체 리소스를 제공된 데이터로 교체하도록 설계되었다. 동일한 PUT 요청을 여러 번 보내도 리소스의 상태는 각 요청 후 동일하게 유지되어 멱등성을 갖는다.
 
-### Idempotency in PATCH:
+### PATCH에서의 멱등성:
 
-The PATCH method is intended for partial updates, meaning it only changes specified fields of a resource. Whether PATCH is idempotent can depend on how the server handles the PATCH requests. If the server can guarantee that applying the same PATCH request multiple times will yield the same result, then PATCH can be considered idempotent.
-However, in practice, PATCH requests may not be idempotent because the partial update might rely on the current state of the resource. For example, if a PATCH request increments a counter, applying the same request multiple times would result in different states (e.g., incrementing the counter multiple times).
+PATCH 메소드는 부분 업데이트를 위해 사용되며, 이는 리소스의 특정 필드만 변경한다. PATCH가 멱등성인지 여부는 서버가 PATCH 요청을 처리하는 방식에 따라 다를 수 있다. 서버가 동일한 PATCH 요청을 여러 번 적용해도 동일한 결과가 보장되면 PATCH는 멱등성으로 간주할 수 있다. 그러나 실제로는 부분 업데이트가 리소스의 현재 상태에 의존할 수 있기 때문에 PATCH 요청이 멱등성이 아닐 수도 있다. 예를 들어, PATCH 요청이 카운터를 증가시키는 경우, 동일한 요청을 여러 번 적용하면 다른 상태가 된다(예: 카운터를 여러 번 증가시키기 때문).
 
-- **Idempotent PATCH Request**
+- **멱등성 PATCH 요청**
 
-    If the PATCH request is designed to set a specific field to a particular value, it can be idempotent.
+    PATCH 요청이 특정 필드를 특정 값으로 설정하도록 설계되면 멱등성이 있을 수 있다.
 
     ```http
     PATCH /users/123
@@ -271,11 +277,11 @@ However, in practice, PATCH requests may not be idempotent because the partial u
     }
     ```
 
-    This request sets the email field to "newemail@example.com". If you send this request multiple times, the email remains "newemail@example.com", making it idempotent.
+    이 요청은 이메일 필드를 "newemail@example.com"으로 설정한다. 이 요청을 여러 번 보내도 이메일은 "newemail@example.com"으로 유지되므로 멱등성이 있다.
 
-- **Non-idempotent PATCH Request**
+- **비멱등성 PATCH 요청**
 
-    If the PATCH request is designed to increment a field's value, it is not idempotent.
+    PATCH 요청이 필드 값을 증가시키도록 설계된 경우, 이는 멱등성이 없다.
 
     ```http
     PATCH /users/123
@@ -283,141 +289,155 @@ However, in practice, PATCH requests may not be idempotent because the partial u
       "incrementLoginCount": true
     }
     ```
-    This request increments the login count. Sending this request multiple times will increment the login count each time, resulting in different states.
+
+    이 요청은 로그인 카운트를 증가시킨다. 이 요청을 여러 번 보내면 로그인 카운트가 매번 증가해 다른 상태가 된다.
 
 <Callout type="warning">
-The PATCH method is used to apply partial updates to a resource. It is efficient for updating specific fields without modifying the entire resource. Unlike PUT, PATCH does not require a complete resource representation and is designed for partial modifications. Use PATCH when you need to update only certain aspects of a resource, but be mindful of its non-idempotent nature by default.
+PATCH 메소드는 리소스에 부분 업데이트를 적용하는 데 사용된다. 이는 전체 리소스를 수정하지 않고 특정 필드를 업데이트하는 데 효율적이다. PUT과 달리 PATCH는 전체 리소스 객체를 요구하지 않으며 부분 수정에 적합하게 설계되었다. 리소스의 특정 부분만 업데이트해야 할 때 PATCH를 사용하지만, 기본적으로 멱등성에 안전하지 않다는 점을 유념해야 한다.
 </Callout>
 
- 
 # DELETE
-The DELETE method is used to delete a resource that's been identified by a URI. On successful deletion, return a HTTP status of 200 (OK) along with a response body, perhaps containing the representation of the deleted item. Otherwise, return a HTTP status of 204 (NO CONTENT) without a response body. 
+DELETE 메소드는 URI로 식별된 리소스를 삭제하는 데 사용된다. 삭제가 성공하면 HTTP 상태 200 (OK)과 함께 응답 본문을 반환할 수 있으며, 삭제된 아이템을 포함할 수 있다. 그렇지 않으면 응답 본문 없이 HTTP 상태 204 (NO CONTENT)를 반환한다.
 
-The DELETE method is idempotent because, regardless of how many times you call it, the outcome remains the same. If the resource is deleted successfully the first time, subsequent DELETE requests for the same resource will return a 404 (Not Found) status since the resource no longer exists. This is a caveat of the DELETE idempotent.
+DELETE 메소드는 멱등성을 갖는다. 이는 몇 번을 호출하든 결과가 동일하다는 것을 의미한다. 리소스가 처음에 성공적으로 삭제되면, 동일한 리소스에 대한 후속 DELETE 요청은 리소스가 더 이상 존재하지 않으므로 404 (Not Found) 상태를 반환한다. 이는 DELETE 멱등성의 특징이다.
 
-## DELETE on an Item Endpoint
-When you use DELETE on an item endpoint, it removes the specific resource identified by its ID. For example, to delete the user with ID 123, you would send a DELETE request to the `/users/123` endpoint.
+## 아이템 엔드포인트에서의 DELETE
+아이템 엔드포인트에서 DELETE를 사용하면 ID로 식별된 특정 리소스를 삭제한다. 예를 들어, ID가 123인 사용자를 삭제하려면 `/users/123` 엔드포인트에 DELETE 요청을 보낸다.
 
 ```http
 DELETE /users/123
 ```
-If the deletion is successful, the server responds with a status indicating the outcome.
+삭제가 성공하면 서버는 결과를 나타내는 상태를 응답으로 보낸다.
 
-**Response:**
+**응답:**
 
 ```http
 200 OK
 {
-  "message": "User deleted successfully"
+  "message": "사용자가 성공적으로 삭제되었습니다"
 }
 ```
-Alternatively, the server might respond with:
+또는 서버는 다음과 같이 응답할 수 있다:
 
 ```http
 204 No Content
 ```
 
-## DELETE on a Collection Endpoint
-Using DELETE on a collection endpoint typically is not recommended because it implies deleting all resources in the collection, which is usually not the intended action. Always specify the resource ID to avoid unintended mass deletions.
+## 컬렉션 엔드포인트에서의 DELETE
+컬렉션 엔드포인트에서 DELETE를 사용하는 것은 일반적으로 권장되지 않는다. 이는 컬렉션의 모든 리소스를 삭제하는 것을 의미하며, 이는 보통 의도된 동작이 아니다. 항상 리소스 ID를 지정하여 의도하지 않은 대량 삭제를 피해야 한다.
 
-## Handling Non-Existent Resources
-If you attempt to delete a resource that does not exist, the server should return a 404 (Not Found) status.
+## 존재하지 않는 리소스 처리
+존재하지 않는 리소스를 삭제하려고 하면 서버는 404 (Not Found) 상태를 반환해야 한다.
 
-**Response:**
+**응답:**
 
 ```http
 404 Not Found
 {
-  "error": "User not found"
+  "error": "사용자를 찾을 수 없습니다"
 }
 ```
 
 <Callout type="warning">
-The DELETE method is used to remove resources identified by a URI. It is idempotent, meaning multiple identical DELETE requests have the same effect as a single request. DELETE should be used on item endpoints to remove specific resources, and attempting to delete a non-existent resource should return a 404 status.
+DELETE 메소드는 URI로 식별된 리소스를 삭제하는 데 사용된다. 이 메소드는 멱등성을 가지며, 동일한 DELETE 요청을 여러 번 보내도 결과는 한 번 보낸 것과 동일하다. DELETE는 특정 리소스를 제거하기 위해 아이템 엔드포인트에서 사용해야 하며, 존재하지 않는 리소스를 삭제하려고 시도하면 404 상태를 반환해야 한다.
 </Callout>
 
-# Non-CRUD Operations
+# Non-CRUD 작업
 
 | Verb | Collection | Item | Idempotent | Responses |
 |------|------------|------|------------|-----------|
-| HEAD    | ✔       | ✔    | ✔          | **200** (OK), returns only headers.<br />**404** (Not Found), if id is invalid or not found.<br />**400** (Bad Request), if a query parameter is invalid. |
-| OPTIONS | ✔       | ✔    | ✔          | **200** (OK), returns allowed HTTP methods.<br />**404** (Not Found) if the resource does not exist. |
+| HEAD    | ✔    | ✔      | ✔      | **200** (OK), 헤더만 반환.<br />**404** (Not Found), ID가 잘못되었거나 찾을 수 없는 경우.<br />**400** (Bad Request), 쿼리 매개변수가 잘못된 경우. |
+| OPTIONS | ✔    | ✔      | ✔      | **200** (OK), 허용된 HTTP 메서드를 반환.<br />**404** (Not Found), 리소스가 존재하지 않는 경우. |
 
 # HEAD
-The HEAD method is similar to GET, but it does not return a response body. It is used to retrieve the headers of a resource, which can be useful for checking if a resource exists or for retrieving metadata such as the Content-Type or Content-Length.
+HEAD 메소드는 GET과 유사하지만, 응답 본문을 반환하지 않는다. 이는 리소스의 헤더를 가져오는 데 사용되며, 리소스가 존재하는지 확인하거나 Content-Type 또는 Content-Length와 같은 메타데이터를 검색하는 데 유용하다.
 
-## Why Use HEAD
+## HEAD를 사용하는 이유
 
-The HEAD method is useful for:
-- **Checking Resource Existence**: Before making a GET request, you can use HEAD to check if a resource exists.
-- **Retrieving Metadata**: Get information about a resource without downloading the entire content.
+HEAD 메소드는 다음과 같은 경우에 유용하다:
+- **리소스 존재 여부 확인**: GET 요청을 하기 전에 HEAD를 사용하여 리소스가 존재하는지 확인한다.
+- **메타데이터 검색**: 전체 콘텐츠를 다운로드하지 않고 리소스에 대한 정보를 얻는다.
 
-## HEAD on a Collection or Item Endpoint?
-The HEAD method can be used on both item and collection endpoints. It retrieves the headers without a response body, making it useful for checking the existence of resources and retrieving metadata without the overhead of fetching the entire resource or collection.
+## 컬렉션 또는 아이템 엔드포인트에서의 HEAD
+HEAD 메소드는 아이템 및 컬렉션 엔드포인트 모두에서 사용할 수 있다. 이는 응답 본문 없이 헤더를 가져오기 때문에 리소스의 존재 여부를 확인하고 메타데이터를 검색하는 데 유용하다.
 
 ```http
 HEAD /users/123
 HEAD /users
 ```
 
-If the resource exists, the server responds with headers but no body.
+리소스가 존재하면, 서버는 본문 없이 헤더만 응답한다.
 
-**Response:**
+**응답:**
 ```http
 200 OK
 Content-Type: application/json
 Content-Length: 123
 ```
 
-If the resource does not exist, the server responds with a 404 status.
+리소스가 존재하지 않으면, 서버는 404 상태를 응답한다.
 
-**Response:**
+**응답:**
 ```http
 404 Not Found
 ```
 
 # OPTIONS
-The OPTIONS method is used to describe the communication options for the target resource. It returns the allowed HTTP methods and other options.
+OPTIONS 메소드는 대상 리소스에 대한 통신 옵션을 설명하는 데 사용된다. 이 메소드는 허용된 HTTP 메소드와 기타 옵션을 반환한다.
 
-## Why Use OPTIONS
+## OPTIONS를 사용하는 이유
 
-The OPTIONS method is useful for:
-- **Discovering Supported Methods**: Determine which HTTP methods are supported by a resource.
-- **CORS Preflight Requests**: Commonly used in Cross-Origin Resource Sharing (CORS) to check which HTTP methods and headers are allowed.
+OPTIONS 메소드는 다음과 같은 경우에 유용하다:
+- **지원되는 메소드 검색**: 리소스에서 지원되는 HTTP 메소드를 확인한다.
+- **CORS 사전 요청**: Cross-Origin Resource Sharing (CORS)에서 어떤 HTTP 메소드와 헤더가 허용되는지 확인하는 데 자주 사용된다.
 
-## OPTIONS on an Item Endpoint
-When you use OPTIONS on an item endpoint, it retrieves the HTTP methods supported by the resource identified by its ID. For example, to find out what operations can be performed on the user with ID 123, you would send an OPTIONS request to the `/users/123` endpoint.
+## 아이템 엔드포인트에서의 OPTIONS
+아이템 엔드포인트에서 OPTIONS를 사용하면 ID로 식별된 리소스가 지원하는 HTTP 메소드를 가져온다. 예를 들어, ID가 123인 사용자에 대해 수행할 수 있는 작업을 확인하려면 `/users/123` 엔드포인트에 OPTIONS 요청을 보낸다.
 
 ```http
 OPTIONS /users/123
 ```
 
-The server responds with the allowed methods.
+서버는 허용된 메소드와 함께 응답한다.
 
-**Response:**
+**응답:**
 ```http
 200 OK
-Allow: GET, POST, PUT, DELETE, OPTIONS
+Allow: GET, PUT, PATCH, DELETE, OPTIONS
 ```
 
-## OPTIONS on a Collection Endpoint
-Similarly, OPTIONS can be used on a collection endpoint to retrieve the allowed methods for the collection.
+## 컬렉션 엔드포인트에서의 OPTIONS
+마찬가지로, OPTIONS는 컬렉션 엔드포인트에서 컬렉션에 대해 허용된 메소드를 가져오는 데 사용할 수 있다.
 
 ```http
 OPTIONS /users
 ```
 
-**Response:**
+**응답:**
 ```http
 200 OK
 Allow: GET, POST, OPTIONS
 ```
 
 <Callout type="warning">
-The HEAD method is used to retrieve headers without a response body, useful for checking resource existence and metadata. The OPTIONS method describes the communication options for a resource, useful for discovering supported HTTP methods and CORS preflight requests.
+HEAD 메소드는 응답 본문 없이 헤더를 가져오는 데 사용되며, 리소스의 존재 여부와 메타데이터를 확인하는 데 유용하다. OPTIONS 메소드는 리소스에 대한 통신 옵션을 설명하며, 지원되는 HTTP 메소드를 발견하고 CORS 사전 요청을 확인하는 데 유용하다.
 </Callout>
 
-### Footnotes
+# 맺음말
+
+이 글에서는 다양한 HTTP 메소드를 컬렉션과 아이템 엔드포인트에서 어떻게 사용하는지, 그리고 멱등성 관점에서의 차이점과 주의해야 할 사항에 대해 설명했다. 각 메소드는 고유한 목적과 사용 사례가 있으며, 올바르게 사용하는 것이 웹 애플리케이션의 효율성과 안정성을 높이는 데 중요하다.
+
+- **GET**: 리소스를 가져오는 데 사용하며, 멱등성과 안전성을 가진다.
+- **POST**: 새로운 리소스를 생성하는 데 사용하며, 멱등성이 없다.
+- **PUT**: 전체 리소스를 대체하는 데 사용하며, 멱등성을 가진다.
+- **PATCH**: 리소스를 부분적으로 수정하는 데 사용하며, 기본적으로 멱등성이 없다.
+- **DELETE**: 리소스를 제거하는 데 사용하며, 멱등성을 가진다.
+- **HEAD**: 리소스의 헤더를 가져오는 데 사용하며, 응답 본문 없이 멱등성을 가진다.
+- **OPTIONS**: 리소스의 통신 옵션을 설명하는 데 사용하며, 멱등성을 가진다.
+
+각 메소드의 특성과 이를 적절히 사용하는 방법을 이해하면 API 설계와 구현에서 발생할 수 있는 많은 문제를 예방할 수 있다. 멱등성과 관련된 사항을 고려하여, 요청이 의도한 대로 작동하고 불필요한 부하를 줄일 수 있도록 주의해야 한다. 이러한 이해를 바탕으로, 더욱 안정적이고 효율적인 웹 서비스를 구축할 수 있기를 바란다.
+
+### 각주
 
 [^1]: `/orders`
 [^2]: `/orders/{orderId}`

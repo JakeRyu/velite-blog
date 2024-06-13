@@ -34,12 +34,10 @@ language: ko
 | 409 Conflict | 충돌로 인해 요청을 처리할 수 없음. |
 | 500 Internal Server Error | 서버에서 오류가 발생함. |
 
+# POST
+POST 메서드는 리소스를 생성하는 데 사용된다. 리소스 생성은 애플리케이션의 상태를 변경하는 행위 중 하나이기 때문에 그 동작을 여러 번 수행하는 것에 주의해야 한다. 동일한 두 개의 POST 요청을 하면 동일한 데이터를 포함하는 두 개의 리소스가 생성될 가능성이 크다. 이를 멱등성[^3]이 없다고 표현한다. 따라서 멱등성이 필요없는 리소스 요청에만 POST 동사를 사용하자. 멱등성이 필요한 경우에는 PUT을 사용하여 생성 또는 업데이트가 자동으로 관리되도록 할 수 있다.
 
-
-# POST 
-The POST method is used to create resources. Note that it is neither safe (as it changes status) nor idempotent. Making two identical POST requests is likely to result in creating two resources containing the same data. It is therefore recommended to use the POST verb for non-idempotent resource requests.
-
-Additionally, POST can be used to trigger functions. Functions that may take a longer time to complete should immediately return a 202(Accepted) with a link to check the status of the process during its completion. This is an exceptional case where you use a verb with resources as follows:
+한편으로, POST는 함수처럼 동작하는 엔드포인트를 트리거하는 데 사용된다. 완료하는 데 시간이 오래 걸릴 수 있는 함수는 202(Accepted)를 즉시 반환하고, 과정이 완료되는 동안 상태를 확인할 수 있는 링크를 제공해야 한다. 이것은 엔드포인트 작명에 동사를 사용하는 예외적인 경우이다.
 
 - **POST /saving-accounts/calculate-interest**
 - **POST /members/import-data**
@@ -423,3 +421,4 @@ The HEAD method is used to retrieve headers without a response body, useful for 
 
 [^1]: `/orders`
 [^2]: `/orders/{orderId}`
+[^3]: 멱등성은 동일한 연산을 여러 번 수행하더라도 결과가 달라지지 않는 성질을 말한다. 예를 들어, 특정 상태를 설정하는 API 요청이 멱등성을 가지면, 해당 요청을 여러 번 보내더라도 서버의 최종 상태는 처음 요청을 보냈을 때와 동일하게 유지된다. 이는 시스템의 일관성을 유지하는 데 중요한 개념이다.

@@ -3,6 +3,8 @@ import { siteConfig } from "@/config/site"
 import { Metadata } from "next"
 import Link from "next/link"
 import { getLanguageCookie } from "../serverUtils"
+import { cn } from "@/lib/utils"
+import { buttonVariants } from "../../components/ui/button"
 
 export const metadata: Metadata = {
   title: "About | REFINED fullstack",
@@ -169,7 +171,11 @@ export default async function AboutPage() {
           )}
           <p className="pt-5 text-black text-end">
             <Link
-              className="mr-5"
+              className={cn(
+                buttonVariants({ variant: "link" }),
+                "mr-5",
+                "text-xl"
+              )}
               href="https://portfolio.jakeryu.com"
               target="_blank"
             >

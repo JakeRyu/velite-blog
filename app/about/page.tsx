@@ -40,24 +40,20 @@ export default async function AboutPage() {
             Software Developer
           </p>
         </div>
-        <div className="text-muted-foreground text-lg">
+        <div className="text-lg prose dark:prose-invert">
           {language === "en" ? (
             <div>
-              <h2 className="text-black text-2xl font-bold mb-2">
+              <h2 className="text-2xl font-bold mb-2">
                 Hello there! Nice to meet you 😊
               </h2>
-              <p className="mb-5">
+              <p className="mb-5 text-muted-foreground">
                 My name is Jake Ryu. I was born and raised in South Korea, where
                 I began my journey as a software developer. It's been{" "}
                 {`${calculateYears(2000)}`} years since I started. After gaining
                 six years of experience in Korea, I moved to the UK to help
                 build the local systems for Hyundai Motor Company. I have since
                 settled here and am currently working as a Lead Developer at{" "}
-                <a
-                  className="font-semibold"
-                  href="https://www.barnett-waddingham.co.uk/"
-                  target="_blank"
-                >
+                <a href="https://www.barnett-waddingham.co.uk/" target="_blank">
                   Barnett Waddingham
                 </a>
                 , a financial services company specializing in workplace
@@ -66,10 +62,10 @@ export default async function AboutPage() {
                 <span className="font-bold">React</span> to create amazing
                 projects.
               </p>
-              <h2 className="text-black text-2xl font-bold mb-2">
+              <h2 className="text-2xl font-bold mb-2">
                 Interests and Philosophy
               </h2>
-              <p className="mb-5">
+              <p className="mb-5 text-muted-foreground">
                 I have a keen interest in web and solution architecture. When
                 designing backends, a solid architecture is crucial for
                 providing stable services. The world of software presented
@@ -80,7 +76,7 @@ export default async function AboutPage() {
                 In this ever-growing field, I strive to stay current with the
                 latest technology trends and best practices.
               </p>
-              <p className="mb-5">
+              <p className="mb-5 text-muted-foreground">
                 I believe that developers have a responsibility to implement
                 requirements accurately and efficiently. We all know the
                 importance of tests in enhancing code quality and minimizing
@@ -92,18 +88,14 @@ export default async function AboutPage() {
                 business logic through clear domain models. These approaches
                 help me write robust and maintainable code.
               </p>
-              <h2 className="text-black text-2xl font-bold mb-2">
-                Beyond Development
-              </h2>
-              <p className="mb-5">
+              <h2 className="text-2xl font-bold mb-2">Beyond Development</h2>
+              <p className="mb-5 text-muted-foreground">
                 When I’m not coding, I enjoy watching English Premier League
                 (EPL) matches. I also love reading novels and self-improvement
                 books.
               </p>
-              <h2 className="text-black text-2xl font-bold mb-2">
-                Welcome to My Blog!
-              </h2>
-              <p className="mb-5">
+              <h2 className="text-2xl font-bold mb-2">Welcome to My Blog!</h2>
+              <p className="mb-5 text-muted-foreground">
                 Through this blog, I aim to provide useful information and tips
                 for everyone, from novice developers to seasoned professionals.
                 If you have any questions or feedback, please feel free to reach
@@ -113,10 +105,10 @@ export default async function AboutPage() {
             </div>
           ) : (
             <div>
-              <h2 className="text-black text-2xl font-bold mb-2">
+              <h2 className="text-2xl font-bold mb-2">
                 안녕하세요! 반갑습니다 😊
               </h2>
-              <p className="mb-5">
+              <p className="mb-5 text-muted-foreground">
                 류지형 입니다. 대한민국에서 태어나고 자라며 소프트웨어
                 개발자로서의 여정을 시작했습니다. 벌써 시작한 지{" "}
                 {`${calculateYears(2000)}`}년이 되었네요. 한국에서 6년의 경험을
@@ -131,10 +123,8 @@ export default async function AboutPage() {
                 <span className="font-bold">리액트</span>를 사용하여 멋진
                 프로젝트들을 만들어가고 있습니다.
               </p>
-              <h2 className="text-black text-2xl font-bold mb-2">
-                관심 분야와 철학
-              </h2>
-              <p className="mb-5">
+              <h2 className="text-2xl font-bold mb-2">관심 분야와 철학</h2>
+              <p className="mb-5 text-muted-foreground">
                 저는 웹과 솔루션 아키텍쳐에 관심이 많아요. 백엔드를 구성할 때,
                 안정적인 서비스를 제공하기 위해선 아키텍쳐가 중요하죠. 브라우저
                 안에서 표현하는 소프트웨어 세상도 흥미롭습니다. 과거에도 웹의
@@ -144,7 +134,7 @@ export default async function AboutPage() {
                 기술 트렌드와 베스트 프랙티스를 따라가며 꾸준이 성장하려고
                 노력하고 있습니다.
               </p>
-              <p className="mb-5">
+              <p className="mb-5 text-muted-foreground">
                 개발자는 요구사항을 정확하고 효율적으로 구현해야 하는 책임이
                 있다고 생각해요. 코드 품질을 높이고 오류를 최소화하는 데
                 테스트가 얼마나 중요한지는 누구나 알고 있죠. 그래서 저는{" "}
@@ -161,17 +151,15 @@ export default async function AboutPage() {
                 합니다. 이 두 가지 방법론을 통해 저는 더 견고하고 유지보수하기
                 쉬운 코드를 작성하려고 노력하고 있습니다.
               </p>
-              <h2 className="text-black text-2xl font-bold mb-2">
-                개발 외 이야기
-              </h2>
-              <p className="mb-5">
+              <h2 className="text-2xl font-bold mb-2">개발 외 이야기</h2>
+              <p className="mb-5 text-muted-foreground">
                 코딩을 하지 않을 때는 잉글리시 프리미어리그(EPL) 경기를 보는
                 것을 좋아합니다. 소설이나 자기 계발서를 읽는 것도 좋아합니다.
               </p>
-              <h2 className="text-black text-2xl font-bold mb-2">
+              <h2 className="text-2xl font-bold mb-2">
                 블로그에 오신 것을 환영합니다!
               </h2>
-              <p className="mb-5">
+              <p className="mb-5 text-muted-foreground">
                 이 블로그를 통해 초보 개발자부터 숙련된 개발자까지 모두에게
                 도움이 될 수 있는 유용한 정보와 팁을 제공하고자 합니다. 질문이나
                 의견이 있으시면 언제든지 이메일로 연락 주세요. 함께 배우고

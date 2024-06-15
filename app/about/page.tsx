@@ -40,7 +40,7 @@ export default async function AboutPage() {
             Software Developer
           </p>
         </div>
-        <div className="text-lg prose dark:prose-invert">
+        <div className="text-lg">
           {language === "en" ? (
             <div>
               <h2 className="text-2xl font-bold mb-2">

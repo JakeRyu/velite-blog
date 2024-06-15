@@ -48,7 +48,7 @@ export default async function AboutPage() {
               </h2>
               <p className="mb-5 text-muted-foreground">
                 My name is Jake Ryu. I was born and raised in South Korea, where
-                I began my journey as a software developer. It's been{" "}
+                I began my journey as a software developer. It&apos;s been{" "}
                 {`${calculateYears(2000)}`} years since I started. After gaining
                 six years of experience in Korea, I moved to the UK to help
                 build the local systems for Hyundai Motor Company. I have since

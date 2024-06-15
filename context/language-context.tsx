@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react"
 import { CookiesProvider, useCookies } from "react-cookie"
 import {
   getLastPathSegment,
+  isAboutUrl,
   isBlogPageUrl,
   isBlogUrl,
   isHomeUrl,
@@ -55,7 +56,12 @@ export default function LanguageContextProvider({
       return
     }
 
-    if (isTagsUrl(url) || isTagPageUrl(url) || isHomeUrl(url)) {
+    if (
+      isTagsUrl(url) ||
+      isTagPageUrl(url) ||
+      isHomeUrl(url) ||
+      isAboutUrl(url)
+    ) {
       window.location.reload()
       return
     }

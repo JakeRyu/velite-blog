@@ -90,6 +90,15 @@ export function isHomeUrl(url: string) {
   return segments.length === 0
 }
 
+export function isAboutUrl(url: string) {
+  const segment = getLastPathSegment(url)
+  if (segment === "about") {
+    return true
+  }
+
+  return false
+}
+
 export function getLastPathSegment(url: string) {
   try {
     const segments = getNonEmptyPathSegments(url)

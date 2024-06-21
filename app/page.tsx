@@ -8,7 +8,9 @@ import { getLanguageCookie } from "./serverUtils"
 
 export default function Home() {
   const language = getLanguageCookie()
-  const postsInLanguage = posts.filter((post) => post.language === language)
+  const postsInLanguage = posts.filter(
+    (post) => post.language === language && post.published
+  )
   const latestPosts = sortPosts(postsInLanguage).slice(0, 5)
   return (
     <>

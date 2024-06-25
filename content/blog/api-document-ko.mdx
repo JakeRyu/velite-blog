@@ -27,7 +27,7 @@ API(애플리케이션 프로그래밍 인터페이스)는 현대적인 웹 또�
 
 ## 3. 궁극적으로 시간 절약
 
-사전에 문서를 작성하는 것이 추가 작업처럼 보일 수 있으나, 장기적으로는 보상을 받게 된다. 좋은 문서는 유지 보수를 쉽게 만들고 새로운 팀원들의 적응 시간을 줄여준다. 또한 개발 중 반복적인 설명, 문제 해결, 기능 변경에 소요되는 시간을 크게   줄여준다.
+사전에 문서를 작성하는 것이 추가 작업처럼 보일 수 있으나, 장기적으로는 보상을 받게 된다. 좋은 문서는 유지 보수를 쉽게 만들고 새로운 팀원들의 적응 시간을 줄여준다. 또한 개발 중 반복적인 설명, 문제 해결, 기능 변경에 소요되는 시간을 크게 줄여준다.
 
 # API 사양(API Specification)과 API 문서화
 
@@ -48,6 +48,8 @@ API가 변경될 때마다 문서도 업데이트해야 한다. 사양이 있으
 ## 5. 학습 곡선
 사양이 있는 경우, 새로운 팀원이나 외부 개발자가 API를 이해하고 사용하는 데 도움이 된다. 명확하게 정의된 사양을 통해 API의 동작 방식을 빠르게 파악할 수 있다. 사양이 없으면 학습 곡선이 더 가파르고, 이해에 시간이 더 걸릴 수 있다.
 
+---
+
 # API 사양을 정의하고 문서화하는 도구들
 
 API 사양을 정의하고 문서화하기 위해 많이 사용하는 도구들이 몇 가지 있다. 각 도구는 특정 기능과 장점을 가지고 있어서, 프로젝트의 요구 사항에 맞게 선택할 수 있다.
@@ -58,26 +60,36 @@ API 사양을 정의하고 문서화하기 위해 많이 사용하는 도구들�
 - **Swagger UI**: 작성된 OpenAPI 사양을 기반으로 API 문서를 시각화해준다. 인터랙티브한 문서를 통해 API를 직접 테스트할 수 있다.
 - **Swagger Codegen**: OpenAPI 사양을 기반으로 다양한 언어의 클라이언트 SDK와 서버 스텁 코드를 생성해준다.
 
+<ExtLink href="https://editor.swagger.io/">Swagger Editor</ExtLink>
+
 ### 2. Postman
 Postman은 API 개발과 테스트를 위한 도구로 잘 알려져 있다. 최근에는 Postman에서 API 사양을 작성하고 문서화할 수 있는 기능도 제공하고 있다.
 - **API Documentation**: Postman 내에서 API를 정의하고 자동으로 문서를 생성할 수 있다.
 - **API Testing**: 정의된 API를 바로 테스트할 수 있는 기능을 제공한다.
 - **Mock Server**: API의 모형 서버를 생성하여 실제 구현 전에 API 동작을 테스트할 수 있다.
 
+<ExtLink href="https://stoplight.io/demo">Download</ExtLink>
+
 ### 3. Redoc
 Redoc은 OpenAPI 사양을 기반으로 정적 HTML 문서를 생성해주는 도구다. 직관적이고 아름다운 UI를 제공하며, 대규모 API 문서화에 유용하다.
 - **Customizable**: 테마와 레이아웃을 커스터마이징 할 수 있다.
 - **Interactive**: 인터랙티브한 요소를 통해 API 엔드포인트를 쉽게 탐색할 수 있다.
+
+Showcase: <ExtLink href="https://docs.docker.com/engine/api/v1.25/">Docker Engine API</ExtLink>
 
 ### 4. RAML (RESTful API Modeling Language)
 RAML은 RESTful API를 정의하기 위한 또 다른 언어다. RAML을 사용하면 API를 쉽게 정의하고 문서화할 수 있다.
 - **API Designer**: 웹 기반의 RAML 편집기로, 실시간 미리보기를 제공한다.
 - **API Console**: 정의된 RAML을 시각화하여 API 문서를 생성한다.
 
+<ExtLink href="https://raml-org.github.io/playground/learn_raml.html?raml=%23%25RAML%201.0%0Atitle%3A%20Mobile%20Order%20API%0AbaseUri%3A%20http%3A%2F%2Flocalhost%3A8081%2Fapi%0Aversion%3A%201.0%0A%0Auses%3A%0A%20%20assets%3A%20assets.lib.raml%0A%0AannotationTypes%3A%0A%20%20monitoringInterval%3A%0A%20%20%20%20type%3A%20integer%0A%0A%2Forders%3A%0A%20%20displayName%3A%20Orders%0A%20%20get%3A%0A%20%20%20%20is%3A%20%5B%20assets.paging%20%5D%0A%20%20%20%20(monitoringInterval)%3A%2030%0A%20%20%20%20description%3A%20Lists%20all%20orders%20of%20a%20specific%20user%0A%20%20%20%20queryParameters%3A%0A%20%20%20%20%20%20userId%3A%0A%20%20%20%20%20%20%20%20type%3A%20string%0A%20%20%20%20%20%20%20%20description%3A%20use%20to%20query%20all%20orders%20of%20a%20user%0A%20%20post%3A%0A%20%20%2F%7BorderId%7D%3A%0A%20%20%20%20get%3A%0A%20%20%20%20%20%20responses%3A%0A%20%20%20%20%20%20%20%20200%3A%0A%20%20%20%20%20%20%20%20%20%20body%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20application%2Fjson%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20type%3A%20assets.Order%0A%20%20%20%20%20%20%20%20%20%20%20%20application%2Fxml%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20type%3A%20!include%20schemas%2Forder.xsd#">RAML Playground</ExtLink>
+
 ### 5. API Blueprint
 API Blueprint는 간단한 마크다운 문법을 사용하여 API를 정의할 수 있는 언어다. 문서화뿐만 아니라 API 설계에도 유용하다.
 - **Aglio**: API Blueprint를 기반으로 HTML 문서를 생성해주는 도구다.
 - **Drafter**: API Blueprint를 파싱하고 분석해주는 라이브러리다.
+
+<ExtLink href="https://apiblueprint.org/tools.html#editors">Editor plugin</ExtLink>
 
 ### 6. Stoplight
 Stoplight는 API 설계, 개발, 문서화를 위한 통합 도구다. OpenAPI, RAML, API Blueprint 등을 지원하며, 다양한 기능을 제공한다.
@@ -85,6 +97,7 @@ Stoplight는 API 설계, 개발, 문서화를 위한 통합 도구다. OpenAPI, 
 - **Mock Server**: API의 모의 서버를 생성하여 테스트할 수 있다.
 - **Documentation**: 자동으로 API 문서를 생성하고, 인터랙티브한 문서를 제공한다.
 
+<ExtLink href="https://stoplight.io/demo">Demo</ExtLink>
 
 ## 예제 1: OpenAPI
 

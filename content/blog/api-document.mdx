@@ -103,6 +103,7 @@ Stoplight is an integrated tool for API design, development, and documentation. 
 ## Example 1: OpenAPI
 Let's explore the specific method of documenting an API using OpenAPI, one of the most popular specifications for API documentation. OpenAPI allows you to describe your API's endpoints, request/response formats, and authentication methods in a standardized format.
 
+Sure, here is the code with the comments translated into English:
 
 ```yaml
 openapi: 3.0.0
@@ -112,16 +113,16 @@ info:
 paths:
   /users:
     get:
-      summary: 사용자 목록 조회
+      summary: Retrieve a list of users
       parameters:
         - in: query
           name: limit
           schema:
             type: integer
-          description: 반환할 최대 사용자 수
+          description: Maximum number of users to return
       responses:
         '200':
-          description: 사용자 객체의 JSON 배열
+          description: JSON array of user objects
           content:
             application/json:
               schema:
@@ -129,7 +130,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/User'
     post:
-      summary: 새로운 사용자 생성
+      summary: Create a new user
       requestBody:
         required: true
         content:
@@ -138,7 +139,7 @@ paths:
               $ref: '#/components/schemas/NewUser'
       responses:
         '201':
-          description: 생성됨
+          description: Created
           content:
             application/json:
               schema:
@@ -192,11 +193,11 @@ types:
 
 /users:
   get:
-    description: 사용자 목록 조회
+    description: Retrieve a list of users
     queryParameters:
       limit:
         type: integer
-        description: 반환할 최대 사용자 수
+        description: Maximum number of users to return
     responses:
       200:
         body:
@@ -204,23 +205,23 @@ types:
             type: User[]
             example:
               [
-                { "id": 1, "name": John Doe", "email": "john@example.com" },
-                { "id": 2, "name": Jane Smith", "email": "jane@example.com" }
+                { "id": 1, "name": "John Doe", "email": "john@example.com" },
+                { "id": 2, "name": "Jane Smith", "email": "jane@example.com" }
               ]
   post:
-    description: 새로운 사용자 생성
+    description: Create a new user
     body:
       application/json:
         type: NewUser
         example:
-          { "name": Alice Johnson", "email": "alice@example.com" }
+          { "name": "Alice Johnson", "email": "alice@example.com" }
     responses:
       201:
         body:
           application/json:
             type: User
             example:
-              { "id": 3, "name": Alice Johnson", "email": "alice@example.com" }
+              { "id": 3, "name": "Alice Johnson", "email": "alice@example.com" }
 ```
 
 This RAML specification describes the same API functionality as the `OpenAPI` example:

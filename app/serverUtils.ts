@@ -4,9 +4,9 @@ export function getLanguageCookie() {
   const cookieStore = cookies()
   const cookie = cookieStore.get("language")
 
-  if (cookie) {
-    return cookie.value
+  if (!cookie) {
+    return "en"
   }
 
-  return undefined
+  return cookie.value
 }

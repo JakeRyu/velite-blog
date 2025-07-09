@@ -8,7 +8,7 @@ import { Metadata } from "next"
 import { getLanguageCookie } from "../serverUtils"
 
 export const metadata: Metadata = {
-  title: "Blog | REFINED fullstack",
+  title: "Blog | Codewise Architect",
   description:
     "My insights and experiences from my journey in web development.",
 }

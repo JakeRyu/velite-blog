@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 import { buttonVariants } from "../../components/ui/button"
 
 export const metadata: Metadata = {
-  title: "About | REFINED fullstack",
+  title: "About | Codewise Architect",
   description: "Information about me",
 }
 

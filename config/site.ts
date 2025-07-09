@@ -1,7 +1,7 @@
 export const siteConfig = {
-  name: "REFINED fullstack",
+  name: "Codewise Architect",
   url: "https://jakeryu.com",
-  description: "Code, Connect, Create: Insights from a Full-Stack Enthusiast.",
+  description: "Design with Depth, Build with Intent",
   author: "Jake Ryu",
   email: "jake@jakeryu.com",
   links: {
